@@ -4,7 +4,9 @@ import getBombs from '../Utils/getBombs';
 import Case from './Case';
 
 interface IProps {
-	difficulty: difficulty;
+	bombCount: number;
+	width: number;
+	height: number;
 }
 
 interface IState {
@@ -20,10 +22,11 @@ class Board extends Component<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 		let nbBombed = 0;
-		for (let i = 0; i < 100; i++) {
+		const size = this.props.height * this.props.width;
+		for (let i = 0; i < size; i++) {
 			const isBombed = getBombs(7);
-			this.board.push(<Case ref={this.boardRef[i]} isBombed={isBombed} />);
 			this.boardRef.push(createRef());
+			this.board.push(<Case key={i} ref={this.boardRef[i]} isBombed={isBombed} />);
 			if (isBombed) {
 				nbBombed++;
 			}
@@ -31,24 +34,53 @@ class Board extends Component<IProps, IState> {
 
 		this.state = {
 			time: 0,
-			nbBombed
+			nbBombed: nbBombed
 		};
+	}
 
-		this.boardRef.forEach((val, i) => {
-			if (val.current?.getBombed()) {
-				this.boardRef.at(i - 11)?.current?.increaseProximity();
-				this.boardRef.at(i - 10)?.current?.increaseProximity();
-				this.boardRef.at(i - 9)?.current?.increaseProximity();
-				this.boardRef.at(i - 1)?.current?.increaseProximity();
-				this.boardRef.at(i + 1)?.current?.increaseProximity();
-				this.boardRef.at(i + 9)?.current?.increaseProximity();
-				this.boardRef.at(i + 10)?.current?.increaseProximity();
-				this.boardRef.at(i + 11)?.current?.increaseProximity();
-			}
-		});
+	increaseCaseProximity(index: number) {
+		if (index < 0) return;
+		this.boardRef.at(index)?.current?.increaseProximity();
 	}
 
 	componentDidMount() {
+		this.boardRef.forEach((val, i) => {
+			if (val.current?.getBombed()) {
+				const x = i % this.props.width;
+				const y = parseInt((i / this.props.width).toFixed());
+
+				if (y !== 0) {
+					this.increaseCaseProximity(i - this.props.width);
+					if (x !== 0) {
+						this.increaseCaseProximity(i - this.props.width - 1);
+					}
+
+					if (x !== this.props.width - 1) {
+						this.increaseCaseProximity(i - this.props.width + 1);
+					}
+				}
+
+				if (y !== this.props.height - 1) {
+					this.increaseCaseProximity(i + this.props.width);
+					if (x !== 0) {
+						this.increaseCaseProximity(i + this.props.width - 1);
+					}
+
+					if (x !== this.props.width - 1) {
+						this.increaseCaseProximity(i + this.props.width + 1);
+					}
+				}
+
+				if (x !== 0) {
+					this.increaseCaseProximity(i - 1);
+				}
+
+				if (x !== this.props.width - 1) {
+					this.increaseCaseProximity(i + 1);
+				}
+			}
+		});
+
 		this.timeout = setInterval(() => {
 			this.setState({
 				time: this.state.time + 1
@@ -65,9 +97,26 @@ class Board extends Component<IProps, IState> {
 			<div className="game">
 				<div className="counter">
 					<div className="timer">{this.state.time}</div>
-					<div className="bombcounter">{this.state.nbBombed}</div>
+					<div
+						className="bombCounter"
+						onContextMenu={() =>
+							this.setState({
+								nbBombed: this.state.nbBombed - 1
+							})
+						}
+					>
+						{this.state.nbBombed}
+					</div>
 				</div>
-				<div className="Board">{this.board}</div>
+				<div
+					className="Board"
+					style={{
+						gridTemplateColumns: `repeat(${this.props.width}, 1fr)`,
+						gridTemplateRows: `repeat(${this.props.height}, 1fr)`
+					}}
+				>
+					{this.board}
+				</div>
 			</div>
 		);
 	}

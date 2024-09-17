@@ -1,4 +1,5 @@
-import { Component } from 'react';
+import { Component, MouseEvent } from 'react';
+import getCaseImage from '../Utils/getCaseImage';
 
 interface IState {
 	status: caseStatus;
@@ -30,28 +31,36 @@ class Case extends Component<IProps, IState> {
 	increaseProximity() {
 		this.proximity++;
 	}
-	click(type: string) {
-		if (type === 'contextmenu') {
-			this.flag();
-		} else if (type === 'click') {
+
+	onClick(e: MouseEvent<HTMLDivElement>) {
+		if (e.type === 'click') {
 			this.mine();
 		}
 	}
+
 	render() {
-		switch (this.state.status) {
-			case 'visible':
-				return this.showVisible();
-			case 'hidden':
-				return this.showHidden();
-			case 'flagged':
-				return this.showFlagged();
-			default:
-				return <div></div>;
-		}
+		return (
+			<div
+				onContextMenu={e => {
+					this.flag();
+					e.preventDefault();
+				}}
+				onDragStart={e => e.preventDefault()}
+				onClick={this.onClick.bind(this)}
+				className="case"
+			>
+				{getCaseImage(this)}
+			</div>
+		);
 	}
 
 	private mine() {
+		if (this.getStatus() === 'flagged') return true;
+
 		if (this.isBombed) {
+			this.setState({
+				status: 'visible'
+			});
 			return false;
 		} else {
 			this.setState({
@@ -62,22 +71,17 @@ class Case extends Component<IProps, IState> {
 	}
 
 	private flag() {
-		this.setState({
-			status: 'flagged'
-		});
-		return false;
-	}
+		if (this.getStatus() === 'visible') return;
 
-	private showVisible() {
-		return <div className="case caseVisible">{this.proximity}</div>;
-	}
-
-	private showHidden() {
-		return <div onContextMenu={() => false} onClick={this.mine.bind(this)} className="case caseHidden"></div>;
-	}
-
-	private showFlagged() {
-		return <div className="case caseFlagged">F</div>;
+		if (this.getStatus() === 'flagged') {
+			this.setState({
+				status: 'hidden'
+			});
+		} else {
+			this.setState({
+				status: 'flagged'
+			});
+		}
 	}
 }
 
