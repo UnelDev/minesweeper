@@ -1,21 +1,35 @@
-class Case {
-	private status: caseStatus;
+import { Component } from 'react';
+
+interface IState {
+	status: caseStatus;
+}
+
+interface IProps {
+	isBombed: boolean;
+}
+
+class Case extends Component<IProps, IState> {
 	private isBombed: boolean;
 	proximity: number;
-	constructor(isBombed: boolean) {
-		this.isBombed = isBombed;
-		this.status = 'hidden';
+
+	constructor(props: IProps) {
+		super(props);
+		this.isBombed = props.isBombed;
+		this.state = { status: 'hidden' };
 		this.proximity = 0;
 	}
 
 	getStatus() {
-		return this.status;
+		return this.state.status;
 	}
 
 	getBombed() {
 		return this.isBombed;
 	}
 
+	increaseProximity() {
+		this.proximity++;
+	}
 	click(type: string) {
 		if (type === 'contextmenu') {
 			this.flag();
@@ -23,59 +37,47 @@ class Case {
 			this.mine();
 		}
 	}
-
-	private mine() {
-		if (this.isBombed) {
-			return false;
-		} else {
-			this.status = 'visible';
-			return true;
-		}
-	}
-
-	private flag() {
-		this.status = 'flagged';
-		return false;
-	}
-
-	show(key: number) {
-		switch (this.status) {
+	render() {
+		switch (this.state.status) {
 			case 'visible':
-				return this.showVisible(key);
+				return this.showVisible();
 			case 'hidden':
-				return this.showHidden(key);
+				return this.showHidden();
 			case 'flagged':
-				return this.showFlagged(key);
+				return this.showFlagged();
 			default:
 				return <div></div>;
 		}
 	}
 
-	private showVisible(key: number) {
-		return (
-			<div key={key} className="case caseVisible">
-				{this.proximity}
-			</div>
-		);
+	private mine() {
+		if (this.isBombed) {
+			return false;
+		} else {
+			this.setState({
+				status: 'visible'
+			});
+			return true;
+		}
 	}
 
-	private showHidden(key: number) {
-		return (
-			<div
-				key={key}
-				onContextMenu={this.flag.bind(this)}
-				onClick={this.mine.bind(this)}
-				className="case caseHidden"
-			></div>
-		);
+	private flag() {
+		this.setState({
+			status: 'flagged'
+		});
+		return false;
 	}
 
-	private showFlagged(key: number) {
-		return (
-			<div key={key} className="case caseFlagged">
-				F
-			</div>
-		);
+	private showVisible() {
+		return <div className="case caseVisible">{this.proximity}</div>;
+	}
+
+	private showHidden() {
+		return <div onContextMenu={() => false} onClick={this.mine.bind(this)} className="case caseHidden"></div>;
+	}
+
+	private showFlagged() {
+		return <div className="case caseFlagged">F</div>;
 	}
 }
 

@@ -1,8 +1,11 @@
 import Board from './Classes/Board';
 
 function App() {
-	const board = new Board('medium');
-	return <div className="App">{board.show()}</div>;
+	return (
+		<div className="App">
+			<Board difficulty="medium" />
+		</div>
+	);
 }
 
 export default App;
