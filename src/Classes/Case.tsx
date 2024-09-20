@@ -1,5 +1,5 @@
-import { Component, MouseEvent } from 'react';
-import getCaseImage from '../Utils/getCaseImage';
+import { Component, createRef, RefObject } from 'react';
+import CaseImageChanger from '../Components/CaseImage';
 
 interface IState {
 	status: caseStatus;
@@ -7,17 +7,21 @@ interface IState {
 
 interface IProps {
 	isBombed: boolean;
+	discover: () => void;
+	addBombLeft: (value: number) => void;
 }
 
 class Case extends Component<IProps, IState> {
 	private isBombed: boolean;
 	proximity: number;
+	imageRef: RefObject<CaseImageChanger>;
 
 	constructor(props: IProps) {
 		super(props);
 		this.isBombed = props.isBombed;
 		this.state = { status: 'hidden' };
 		this.proximity = 0;
+		this.imageRef = createRef();
 	}
 
 	getStatus() {
@@ -32,12 +36,6 @@ class Case extends Component<IProps, IState> {
 		this.proximity++;
 	}
 
-	onClick(e: MouseEvent<HTMLDivElement>) {
-		if (e.type === 'click') {
-			this.mine();
-		}
-	}
-
 	render() {
 		return (
 			<div
@@ -46,26 +44,36 @@ class Case extends Component<IProps, IState> {
 					e.preventDefault();
 				}}
 				onDragStart={e => e.preventDefault()}
-				onClick={this.onClick.bind(this)}
+				onClick={() => this.mine({ force: false })}
 				className="case"
 			>
-				{getCaseImage(this)}
+				<CaseImageChanger ref={this.imageRef} />
 			</div>
 		);
 	}
 
-	private mine() {
-		if (this.getStatus() === 'flagged') return true;
+	/**
+	 * @param force - If true, the case will be mined even if it is flagged
+	 */
+	mine({ force }: { force: boolean }) {
+		if (!force && this.getStatus() === 'flagged') return true;
 
 		if (this.isBombed) {
+			this.imageRef.current?.changeImage('bomb');
 			this.setState({
 				status: 'visible'
 			});
 			return false;
 		} else {
-			this.setState({
-				status: 'visible'
-			});
+			this.imageRef.current?.changeImage(this.proximity.toString());
+			this.setState(
+				{
+					status: 'visible'
+				},
+				() => {
+					if (!force) this.props.discover();
+				}
+			);
 			return true;
 		}
 	}
@@ -74,10 +82,14 @@ class Case extends Component<IProps, IState> {
 		if (this.getStatus() === 'visible') return;
 
 		if (this.getStatus() === 'flagged') {
+			this.imageRef.current?.changeImage('full');
+			this.props.addBombLeft(1);
 			this.setState({
 				status: 'hidden'
 			});
 		} else {
+			this.imageRef.current?.changeImage('flag');
+			this.props.addBombLeft(-1);
 			this.setState({
 				status: 'flagged'
 			});
