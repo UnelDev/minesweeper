@@ -9,6 +9,7 @@ interface IProps {
 	isBombed: boolean;
 	discover: () => void;
 	addBombLeft: (value: number) => void;
+	explode: () => void;
 }
 
 class Case extends Component<IProps, IState> {
@@ -63,6 +64,11 @@ class Case extends Component<IProps, IState> {
 			this.setState({
 				status: 'visible'
 			});
+
+			//if call by explotion of other case donc explode
+			if (!force) {
+				this.props.explode();
+			}
 			return false;
 		} else {
 			this.imageRef.current?.changeImage(this.proximity.toString());

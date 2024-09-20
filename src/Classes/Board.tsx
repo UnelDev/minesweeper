@@ -38,6 +38,9 @@ class Board extends Component<IProps, IState> {
 			this.boardRef.push(createRef());
 			this.board.push(
 				<Case
+					explode={() => {
+						this.discoverBombs();
+					}}
 					addBombLeft={(value: number) => this.setState({ nbBombed: this.state.nbBombed + value })}
 					discover={this.discoverEmptyCases.bind(this)}
 					key={i}
@@ -50,6 +53,15 @@ class Board extends Component<IProps, IState> {
 		const { board, boardRef } = shuffleBoard(this.board, this.boardRef);
 		this.board = board;
 		this.boardRef = boardRef;
+	}
+
+	discoverBombs() {
+		this.boardRef.forEach((val, i) => {
+			if (val.current && val.current.getBombed()) {
+				val.current.mine({ force: true });
+			}
+		});
+		this.setState({ nbBombed: 0 });
 	}
 
 	discoverEmptyCases() {
