@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>minesweeper</id>
+    <name>Minesweeper</name>
+    <summary>Minesweeper</summary>
+    <description><![CDATA[
+# Minesweeper
+A Nextcloud app that lets you play Minesweeper.
+    ]]></description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author mail="enee.diiorio@gmail.com" homepage="https://UnelDev.github.io">UnelDev</author>
+    <namespace>Minesweeper</namespace>
+    <category>games</category>
+    <website>https://github.com/UnelDev/minsweeper</website>
+    <bugs>https://github.com/UnelDev/minesweeper/issues</bugs>
+    <screenshot>https://raw.githubusercontent.com/derbenx/nextcloud-solitaire/master/Solitaire.png</screenshot>
+    <dependencies>
+        <nextcloud min-version="25" max-version="30"/>
+    </dependencies>
+	    <navigations>
+        <navigation>
+            <name>Minesweeper</name>
+            <route>minesweeper.page.index</route>
+        </navigation>
+    </navigations>
+</info>
