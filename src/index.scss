@@ -29,7 +29,7 @@
 	border-radius: 5px;
 }
 
-.case {
+.Case {
 	width: 40px;
 	height: 40px;
 	border: 1px solid black;
@@ -38,4 +38,9 @@
 		width: 40px;
 		height: 40px;
 	}
+}
+
+.Menu {
+	display: flex;
+	flex-direction: column;
 }
