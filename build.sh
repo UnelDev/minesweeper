@@ -13,4 +13,5 @@ rmdir build/static/media
 mv build/static/* build/
 rmdir build/static
 
-sed -i '' 's#/static/media/##g' "build/css/main.css"
+sed -i.bak 's#/static/media/##g' "build/css/main.css"
+rm "build/css/main.css.bak"
