@@ -10,6 +10,7 @@ interface IProps {
 	bombCount: number;
 	width: number;
 	height: number;
+	start: (bombs: number, height: number, width: number) => void;
 }
 
 interface IState {
@@ -90,21 +91,26 @@ class Board extends Component<IProps, IState> {
 			}
 		});
 
-		if (nbMined === this.height * this.width - this.props.bombCount) {
-			this.win();
-			return;
-		}
-
+		const mined = new Array<number>();
 		for (let i = 0; i < stack.length; i++) {
 			const index = stack[i];
+			let localNbMined = nbMined;
 			doNearCases(index, this.width, this.height, (newIndex: number) => {
 				const cell = this.boardRef.at(newIndex)?.current!;
-				if (cell.getStatus() !== 'hidden') return;
-				cell.mine(true, true, false);
+				if (cell.getStatus() !== 'hidden' || mined.includes(newIndex)) return;
+				mined.push(newIndex);
+				localNbMined++;
+				cell.mine(false, true, false);
 				if (cell.proximity === 0 && !stack.includes(newIndex)) {
 					stack.push(newIndex);
 				}
 			});
+			nbMined = localNbMined;
+		}
+
+		if (nbMined === this.height * this.width - this.props.bombCount) {
+			this.win();
+			return;
 		}
 	}
 
@@ -119,11 +125,15 @@ class Board extends Component<IProps, IState> {
 		});
 	}
 
+	restart() {
+		this.props.start(this.props.bombCount, this.height, this.width);
+	}
+
 	render() {
 		return (
 			<div className="game">
 				<menu>
-					<Counter ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
+					<Counter start={() => this.restart()} ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
 					<div className="text">{this.state.gameover}</div>
 				</menu>
 				<div className="BoardContainer">

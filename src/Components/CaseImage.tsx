@@ -45,6 +45,7 @@ class CaseImageChanger extends Component<IProps, IState> {
 	}
 
 	changeImage(imageId: string) {
+		if (imageId === this.state.currentImage) return;
 		if (this.state.images.get(imageId)) {
 			this.setState({ currentImage: imageId });
 		}
