@@ -27,6 +27,7 @@
 	display: grid;
 	background-color: black;
 	border-radius: 5px;
+	user-select: none;
 }
 
 .Case {
@@ -43,4 +44,13 @@
 .Menu {
 	display: flex;
 	flex-direction: column;
+	text-align: center;
+	gap: 1vh;
+	& > div {
+		& > input {
+			width: 4em;
+		}
+		display: flex;
+		justify-content: space-between;
+	}
 }

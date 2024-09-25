@@ -1,6 +1,7 @@
 import { useState } from 'react';
+
 import Board from './Classes/Board';
-import Menu from './Classes/Menu';
+import Menu from './Components/Menu';
 
 function App() {
 	const [content, setContent] = useState(<Menu click={click} />);

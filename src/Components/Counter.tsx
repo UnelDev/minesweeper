@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import clearTime from '../Utils/clearTime';
 
 function Counter({ nbBombed }: { nbBombed: number }) {
 	const [time, setTime] = useState(0);
@@ -14,8 +15,8 @@ function Counter({ nbBombed }: { nbBombed: number }) {
 
 	return (
 		<div className="counter">
-			<div className="timer">{time}</div>
-			<div className="bombCounter">{nbBombed}</div>
+			<div className="timer">Time: {clearTime(time)}</div>
+			<div className="bombCounter">Bomb left: {nbBombed}</div>
 		</div>
 	);
 }
