@@ -14,7 +14,7 @@ function Counter({ nbBombed }: { nbBombed: number }) {
 	}, []);
 
 	return (
-		<div className="counter">
+		<div className="Counter">
 			<div className="timer">Time: {clearTime(time)}</div>
 			<div className="bombCounter">Bomb left: {nbBombed}</div>
 		</div>

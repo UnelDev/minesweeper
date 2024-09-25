@@ -13,7 +13,7 @@ interface IProps {
 
 interface IState {
 	nbBombed: number;
-	gameover: String;
+	gameover: string;
 }
 
 class Board extends Component<IProps, IState> {
@@ -27,8 +27,6 @@ class Board extends Component<IProps, IState> {
 
 		this.height = this.props.height;
 		this.width = this.props.width;
-		document.documentElement.style.setProperty('--height', this.height.toString());
-		document.documentElement.style.setProperty('--width', this.width.toString());
 		this.state = {
 			nbBombed: this.props.bombCount,
 			gameover: ''
@@ -119,18 +117,18 @@ class Board extends Component<IProps, IState> {
 					<Counter nbBombed={this.state.nbBombed} />
 					<div className="text">{this.state.gameover}</div>
 				</menu>
-				<div
-					className="Board"
-					style={{
-						animation: this.state.gameover === '' ? '' : 'explode 100ms linear'
-					}}
-				>
-					{this.board}
+				<div className="BoardContainer">
+					<div
+						className="Board"
+						style={{
+							gridTemplateColumns: `repeat(${this.width}, 1fr)`,
+							gridTemplateRows: `repeat(${this.height}, 1fr)`
+						}}
+					>
+						{this.board}
+					</div>
+					{this.state.gameover === '' ? <></> : <div className="splashScreen"></div>}
 				</div>
-				<div
-					className="splashScreen"
-					style={{ display: this.state.gameover === '' ? 'none' : 'inline-block' }}
-				></div>
 			</div>
 		);
 	}

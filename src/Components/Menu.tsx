@@ -11,10 +11,10 @@ function Menu({ click }: { click: () => void }) {
 				<input id="height" inputMode="numeric" defaultValue={10} />
 			</div>
 			<div>
-				<label htmlFor="bombs">Bomb count</label>
+				<label htmlFor="bombs">Bombs</label>
 				<input id="bombs" inputMode="numeric" defaultValue={15} />
 			</div>
-			<button onClick={click}>New game</button>
+			<button onClick={click}>Start</button>
 		</div>
 	);
 }
