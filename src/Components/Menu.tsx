@@ -3,15 +3,15 @@ function Menu({ click }: { click: () => void }) {
 		<div className="Menu">
 			<h2>MINESWEEPER</h2>
 			<div>
-				<label>Width</label>
+				<label htmlFor="width">Width</label>
 				<input id="width" inputMode="numeric" defaultValue={10} />
 			</div>
 			<div>
-				<label>Height</label>
+				<label htmlFor="height">Height</label>
 				<input id="height" inputMode="numeric" defaultValue={10} />
 			</div>
 			<div>
-				<label>Bomb count</label>
+				<label htmlFor="bombs">Bomb count</label>
 				<input id="bombs" inputMode="numeric" defaultValue={15} />
 			</div>
 			<button onClick={click}>New game</button>

@@ -42,15 +42,19 @@
 }
 
 .Menu {
+	padding: 5vh 3vw;
+	border-radius: 15px;
 	display: flex;
 	flex-direction: column;
 	text-align: center;
 	gap: 1vh;
+
 	& > div {
 		& > input {
 			width: 4em;
 		}
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 	}
 }
