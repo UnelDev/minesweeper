@@ -19,18 +19,18 @@ class CaseImageChanger extends Component<IProps, IState> {
 	componentDidMount() {
 		this.preloadImages(
 			new Map([
-				['/Assets/0.png', '0'],
-				['/Assets/1.png', '1'],
-				['/Assets/2.png', '2'],
-				['/Assets/3.png', '3'],
-				['/Assets/4.png', '4'],
-				['/Assets/5.png', '5'],
-				['/Assets/6.png', '6'],
-				['/Assets/7.png', '7'],
-				['/Assets/8.png', '8'],
-				['/Assets/bomb.png', 'bomb'],
-				['/Assets/flag.png', 'flag'],
-				['/Assets/full.png', 'full']
+				['Assets/0.png', '0'],
+				['Assets/1.png', '1'],
+				['Assets/2.png', '2'],
+				['Assets/3.png', '3'],
+				['Assets/4.png', '4'],
+				['Assets/5.png', '5'],
+				['Assets/6.png', '6'],
+				['Assets/7.png', '7'],
+				['Assets/8.png', '8'],
+				['Assets/bomb.png', 'bomb'],
+				['Assets/flag.png', 'flag'],
+				['Assets/full.png', 'full']
 			])
 		);
 	}

@@ -2,6 +2,7 @@ import { Component, createRef, RefObject } from 'react';
 
 import Case from './Case';
 import shuffleBoard from '../Utils/shuffleBoard';
+import doNearCases from '../Utils/doNearCases';
 
 interface IProps {
 	bombCount: number;
@@ -56,9 +57,10 @@ class Board extends Component<IProps, IState> {
 	}
 
 	discoverBombs() {
-		this.boardRef.forEach((val, i) => {
-			if (val.current && val.current.getBombed()) {
-				val.current.mine({ force: true });
+		this.boardRef.forEach(val => {
+			const cell = val.current!;
+			if (cell.getBombed()) {
+				cell.mine({ force: true });
 			}
 		});
 		this.setState({ nbBombed: 0 });
@@ -68,25 +70,20 @@ class Board extends Component<IProps, IState> {
 		const stack = new Array<number>();
 
 		this.boardRef.forEach((val, i) => {
-			if (
-				val.current &&
-				!val.current.getBombed() &&
-				val.current.proximity === 0 &&
-				val.current.getStatus() === 'visible'
-			) {
+			const cell = val.current!;
+			if (!cell.getBombed() && cell.proximity === 0 && cell.getStatus() === 'visible') {
 				stack.push(i);
 			}
 		});
 
 		for (let i = 0; i < stack.length; i++) {
 			const index = stack[i];
-			this.doNearCases(index, (newIndex: number) => {
-				const cell = this.boardRef?.at(newIndex)?.current;
-				if (cell && cell.getStatus() === 'hidden') {
-					cell.mine({ force: true });
-					if (cell.proximity === 0 && !stack.includes(newIndex)) {
-						stack.push(newIndex);
-					}
+			doNearCases(index, this.width, this.height, (newIndex: number) => {
+				const cell = this.boardRef.at(newIndex)?.current!;
+				if (cell.getStatus() !== 'hidden') return;
+				cell.mine({ force: true });
+				if (cell.proximity === 0 && !stack.includes(newIndex)) {
+					stack.push(newIndex);
 				}
 			});
 		}
@@ -98,7 +95,7 @@ class Board extends Component<IProps, IState> {
 				const callback = (index: number) => {
 					this.boardRef.at(index)?.current?.increaseProximity();
 				};
-				this.doNearCases(i, callback);
+				doNearCases(i, this.width, this.height, callback);
 			}
 		});
 
@@ -107,49 +104,6 @@ class Board extends Component<IProps, IState> {
 				time: this.state.time + 1
 			});
 		}, 1000);
-	}
-
-	doNearCases(index: number, callback: (index: number) => void) {
-		const x = index % this.width;
-		const y = Math.floor(index / this.width);
-
-		//not in the first row
-		if (y !== 0) {
-			callback(index - this.width);
-			//not in the first column
-			if (x !== 0) {
-				callback(index - this.width - 1);
-			}
-
-			//not in the last column
-			if (x !== this.width - 1) {
-				callback(index - this.width + 1);
-			}
-		}
-
-		//not in the last row
-		if (y !== this.height - 1) {
-			callback(index + this.width);
-			//not in the first column
-			if (x !== 0) {
-				callback(index + this.width - 1);
-			}
-
-			//not in the last column
-			if (x !== this.width - 1) {
-				callback(index + this.width + 1);
-			}
-		}
-
-		//not in the first column
-		if (x !== 0) {
-			callback(index - 1);
-		}
-
-		//not in the last column
-		if (x !== this.width - 1) {
-			callback(index + 1);
-		}
 	}
 
 	componentWillUnmount(): void {
