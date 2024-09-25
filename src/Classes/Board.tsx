@@ -3,7 +3,7 @@ import { Component, createRef, RefObject } from 'react';
 import Case from './Case';
 import shuffleBoard from '../Utils/shuffleBoard';
 import doNearCases from '../Utils/doNearCases';
-import Counter from '../Components/Counter';
+import Counter from './Counter';
 
 interface IProps {
 	bombCount: number;
@@ -14,6 +14,7 @@ interface IProps {
 interface IState {
 	nbBombed: number;
 	gameover: string;
+	CounterRef: RefObject<Counter>;
 }
 
 class Board extends Component<IProps, IState> {
@@ -29,7 +30,8 @@ class Board extends Component<IProps, IState> {
 		this.width = this.props.width;
 		this.state = {
 			nbBombed: this.props.bombCount,
-			gameover: ''
+			gameover: '',
+			CounterRef: createRef()
 		};
 
 		const size = this.height * this.width;
@@ -56,15 +58,14 @@ class Board extends Component<IProps, IState> {
 	gameover() {
 		this.discoverBombs();
 		this.setState({ gameover: 'you lose' });
+		this.state.CounterRef.current!.stop();
 	}
+
 	discoverBombs() {
 		this.boardRef.forEach(val => {
 			const cell = val.current!;
-			if (cell.getBombed()) {
-				cell.mine({ force: true });
-			}
+			cell.mine({ force: true });
 		});
-		this.setState({ nbBombed: 0 });
 	}
 
 	discoverEmptyCases() {
@@ -78,8 +79,6 @@ class Board extends Component<IProps, IState> {
 				stack.push(i);
 			}
 		});
-
-		console.log(nbMined);
 
 		if (nbMined === this.height * this.width - this.props.bombCount) {
 			this.setState({ gameover: 'you win !!!' });
@@ -114,7 +113,7 @@ class Board extends Component<IProps, IState> {
 		return (
 			<div className="game">
 				<menu>
-					<Counter nbBombed={this.state.nbBombed} />
+					<Counter ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
 					<div className="text">{this.state.gameover}</div>
 				</menu>
 				<div className="BoardContainer">

@@ -87,12 +87,13 @@
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr;
-	&:has(.splashScreen) {
-		animation-name: explode;
-		animation-iteration-count: 6;
-		animation-timing-function: linear;
-		animation-duration: 100ms;
-	}
+}
+
+body:has(.splashScreen) {
+	animation-name: explode;
+	animation-iteration-count: 6;
+	animation-timing-function: linear;
+	animation-duration: 100ms;
 }
 
 .splashScreen {

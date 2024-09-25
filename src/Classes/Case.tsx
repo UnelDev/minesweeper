@@ -65,7 +65,7 @@ class Case extends Component<IProps, IState> {
 				status: 'visible'
 			});
 
-			//if call by explotion of other case donc explode
+			// if not called by an explosion we do boom
 			if (!force) {
 				this.props.explode();
 			}
