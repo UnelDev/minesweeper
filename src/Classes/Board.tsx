@@ -13,6 +13,7 @@ interface IProps {
 
 interface IState {
 	nbBombed: number;
+	gameover: String;
 }
 
 class Board extends Component<IProps, IState> {
@@ -28,7 +29,8 @@ class Board extends Component<IProps, IState> {
 		this.width = this.props.width;
 
 		this.state = {
-			nbBombed: this.props.bombCount
+			nbBombed: this.props.bombCount,
+			gameover: ''
 		};
 
 		const size = this.height * this.width;
@@ -39,6 +41,7 @@ class Board extends Component<IProps, IState> {
 				<Case
 					explode={() => {
 						this.discoverBombs();
+						this.setState({ gameover: 'you lose' });
 					}}
 					addBombLeft={(value: number) => this.setState({ nbBombed: this.state.nbBombed + value })}
 					discover={this.discoverEmptyCases.bind(this)}
@@ -66,13 +69,22 @@ class Board extends Component<IProps, IState> {
 
 	discoverEmptyCases() {
 		const stack = new Array<number>();
-
+		let nbMined = 0;
 		this.boardRef.forEach((val, i) => {
 			const cell = val.current!;
+			if (cell.getStatus() === 'visible') nbMined++;
+
 			if (!cell.getBombed() && cell.proximity === 0 && cell.getStatus() === 'visible') {
 				stack.push(i);
 			}
 		});
+
+		console.log(nbMined);
+
+		if (nbMined === this.height * this.width - this.props.bombCount) {
+			this.setState({ gameover: 'you win !!!' });
+			return;
+		}
 
 		for (let i = 0; i < stack.length; i++) {
 			const index = stack[i];
@@ -101,7 +113,10 @@ class Board extends Component<IProps, IState> {
 	render() {
 		return (
 			<div className="game">
-				<Counter nbBombed={this.state.nbBombed} />
+				<menu>
+					<Counter nbBombed={this.state.nbBombed} />
+					<div className="text">{this.state.gameover}</div>
+				</menu>
 				<div
 					className="Board"
 					style={{
