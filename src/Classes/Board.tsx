@@ -3,6 +3,7 @@ import { Component, createRef, RefObject } from 'react';
 import Case from './Case';
 import shuffleBoard from '../Utils/shuffleBoard';
 import doNearCases from '../Utils/doNearCases';
+import Counter from '../Components/Counter';
 
 interface IProps {
 	bombCount: number;
@@ -11,14 +12,12 @@ interface IProps {
 }
 
 interface IState {
-	time: number;
 	nbBombed: number;
 }
 
 class Board extends Component<IProps, IState> {
 	private boardRef: Array<RefObject<Case>> = [];
 	private board: Array<JSX.Element> = [];
-	private timeout: NodeJS.Timeout | undefined = undefined;
 	height: number;
 	width: number;
 
@@ -29,7 +28,6 @@ class Board extends Component<IProps, IState> {
 		this.width = this.props.width;
 
 		this.state = {
-			time: 0,
 			nbBombed: this.props.bombCount
 		};
 
@@ -98,34 +96,12 @@ class Board extends Component<IProps, IState> {
 				doNearCases(i, this.width, this.height, callback);
 			}
 		});
-
-		this.timeout = setInterval(() => {
-			this.setState({
-				time: this.state.time + 1
-			});
-		}, 1000);
-	}
-
-	componentWillUnmount(): void {
-		clearInterval(this.timeout);
 	}
 
 	render() {
 		return (
 			<div className="game">
-				<div className="counter">
-					<div className="timer">{this.state.time}</div>
-					<div
-						className="bombCounter"
-						onContextMenu={() =>
-							this.setState({
-								nbBombed: this.state.nbBombed - 1
-							})
-						}
-					>
-						{this.state.nbBombed}
-					</div>
-				</div>
+				<Counter nbBombed={this.state.nbBombed} />
 				<div
 					className="Board"
 					style={{
