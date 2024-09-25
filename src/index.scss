@@ -28,6 +28,8 @@
 	background-color: black;
 	border-radius: 5px;
 	user-select: none;
+	grid-template-columns: repeat(var(--width), 1fr);
+	grid-template-rows: repeat(var(--height), 1fr);
 }
 
 .Case {
@@ -56,5 +58,59 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+}
+
+.splashScreen {
+	height: calc(42px * (var(--height)));
+	width: calc(42px * var(--width));
+	margin-top: calc(-42px * (var(--height)));
+	background-color: rgba(182, 182, 182, 0.349);
+}
+
+@keyframes explode {
+	0% {
+		margin-top: 0px;
+		margin-left: 0px;
+	}
+	10% {
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	20% {
+		margin-top: 0px;
+		margin-left: 0px;
+	}
+	30% {
+		margin-top: -10px;
+		margin-left: -10px;
+	}
+	40% {
+		margin-top: 0px;
+		margin-left: 0px;
+	}
+	50% {
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	60% {
+		margin-top: 0px;
+		margin-left: 0px;
+	}
+	70% {
+		margin-top: -10px;
+		margin-left: -10px;
+	}
+	80% {
+		margin-top: 0px;
+		margin-left: 0px;
+	}
+	90% {
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	100% {
+		margin-top: 0px;
+		margin-left: 0px;
 	}
 }

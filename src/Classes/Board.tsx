@@ -27,7 +27,8 @@ class Board extends Component<IProps, IState> {
 
 		this.height = this.props.height;
 		this.width = this.props.width;
-
+		document.documentElement.style.setProperty('--height', this.height.toString());
+		document.documentElement.style.setProperty('--width', this.width.toString());
 		this.state = {
 			nbBombed: this.props.bombCount,
 			gameover: ''
@@ -39,10 +40,7 @@ class Board extends Component<IProps, IState> {
 			this.boardRef.push(createRef());
 			this.board.push(
 				<Case
-					explode={() => {
-						this.discoverBombs();
-						this.setState({ gameover: 'you lose' });
-					}}
+					explode={this.gameover.bind(this)}
 					addBombLeft={(value: number) => this.setState({ nbBombed: this.state.nbBombed + value })}
 					discover={this.discoverEmptyCases.bind(this)}
 					key={i}
@@ -57,6 +55,10 @@ class Board extends Component<IProps, IState> {
 		this.boardRef = boardRef;
 	}
 
+	gameover() {
+		this.discoverBombs();
+		this.setState({ gameover: 'you lose' });
+	}
 	discoverBombs() {
 		this.boardRef.forEach(val => {
 			const cell = val.current!;
@@ -120,12 +122,15 @@ class Board extends Component<IProps, IState> {
 				<div
 					className="Board"
 					style={{
-						gridTemplateColumns: `repeat(${this.width}, 1fr)`,
-						gridTemplateRows: `repeat(${this.height}, 1fr)`
+						animation: this.state.gameover === '' ? '' : 'explode 100ms linear'
 					}}
 				>
 					{this.board}
 				</div>
+				<div
+					className="splashScreen"
+					style={{ display: this.state.gameover === '' ? 'none' : 'inline-block' }}
+				></div>
 			</div>
 		);
 	}
