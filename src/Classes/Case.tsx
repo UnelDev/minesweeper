@@ -45,7 +45,7 @@ class Case extends Component<IProps, IState> {
 					e.preventDefault();
 				}}
 				onDragStart={e => e.preventDefault()}
-				onClick={() => this.mine({ force: false })}
+				onClick={() => this.mine(false, true, true)}
 				className="Case"
 			>
 				<CaseImageChanger ref={this.imageRef} />
@@ -53,11 +53,8 @@ class Case extends Component<IProps, IState> {
 		);
 	}
 
-	/**
-	 * @param force - If true, the case will be mined even if it is flagged
-	 */
-	mine({ force }: { force: boolean }) {
-		if (!force && this.getStatus() === 'flagged') return true;
+	mine(mineFlagged: boolean = false, callExplode: boolean = true, discover: boolean = false) {
+		if (!mineFlagged && this.getStatus() === 'flagged') return;
 
 		if (this.isBombed) {
 			this.imageRef.current?.changeImage('bomb');
@@ -66,10 +63,10 @@ class Case extends Component<IProps, IState> {
 			});
 
 			// if not called by an explosion we do boom
-			if (!force) {
+			if (callExplode) {
 				this.props.explode();
 			}
-			return false;
+			return;
 		} else {
 			this.imageRef.current?.changeImage(this.proximity.toString());
 			this.setState(
@@ -77,10 +74,10 @@ class Case extends Component<IProps, IState> {
 					status: 'visible'
 				},
 				() => {
-					if (!force) this.props.discover();
+					if (discover) this.props.discover();
 				}
 			);
-			return true;
+			return;
 		}
 	}
 

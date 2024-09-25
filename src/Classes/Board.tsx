@@ -4,6 +4,7 @@ import Case from './Case';
 import shuffleBoard from '../Utils/shuffleBoard';
 import doNearCases from '../Utils/doNearCases';
 import Counter from './Counter';
+import SplashScreen from './SplashScreen';
 
 interface IProps {
 	bombCount: number;
@@ -15,6 +16,7 @@ interface IState {
 	nbBombed: number;
 	gameover: string;
 	CounterRef: RefObject<Counter>;
+	SplashRef: RefObject<SplashScreen>;
 }
 
 class Board extends Component<IProps, IState> {
@@ -31,7 +33,8 @@ class Board extends Component<IProps, IState> {
 		this.state = {
 			nbBombed: this.props.bombCount,
 			gameover: '',
-			CounterRef: createRef()
+			CounterRef: createRef(),
+			SplashRef: createRef()
 		};
 
 		const size = this.height * this.width;
@@ -40,7 +43,7 @@ class Board extends Component<IProps, IState> {
 			this.boardRef.push(createRef());
 			this.board.push(
 				<Case
-					explode={this.gameover.bind(this)}
+					explode={this.lose.bind(this)}
 					addBombLeft={(value: number) => this.setState({ nbBombed: this.state.nbBombed + value })}
 					discover={this.discoverEmptyCases.bind(this)}
 					key={i}
@@ -55,16 +58,23 @@ class Board extends Component<IProps, IState> {
 		this.boardRef = boardRef;
 	}
 
-	gameover() {
-		this.discoverBombs();
-		this.setState({ gameover: 'you lose' });
+	lose() {
+		this.discoverBombs(true);
 		this.state.CounterRef.current!.stop();
+		this.state.SplashRef.current!.lose();
+		this.setState({ gameover: 'You lose !' });
 	}
 
-	discoverBombs() {
+	win() {
+		this.discoverBombs(false);
+		this.state.CounterRef.current!.stop();
+		this.state.SplashRef.current!.win();
+		this.setState({ gameover: 'You win !' });
+	}
+
+	discoverBombs(mineFlagged: boolean) {
 		this.boardRef.forEach(val => {
-			const cell = val.current!;
-			cell.mine({ force: true });
+			val.current!.mine(mineFlagged, false, false);
 		});
 	}
 
@@ -81,7 +91,7 @@ class Board extends Component<IProps, IState> {
 		});
 
 		if (nbMined === this.height * this.width - this.props.bombCount) {
-			this.setState({ gameover: 'you win !!!' });
+			this.win();
 			return;
 		}
 
@@ -90,7 +100,7 @@ class Board extends Component<IProps, IState> {
 			doNearCases(index, this.width, this.height, (newIndex: number) => {
 				const cell = this.boardRef.at(newIndex)?.current!;
 				if (cell.getStatus() !== 'hidden') return;
-				cell.mine({ force: true });
+				cell.mine(true, true, false);
 				if (cell.proximity === 0 && !stack.includes(newIndex)) {
 					stack.push(newIndex);
 				}
@@ -126,7 +136,7 @@ class Board extends Component<IProps, IState> {
 					>
 						{this.board}
 					</div>
-					{this.state.gameover === '' ? <></> : <div className="splashScreen"></div>}
+					<SplashScreen ref={this.state.SplashRef} />
 				</div>
 			</div>
 		);

@@ -89,7 +89,7 @@
 	grid-template-rows: 1fr;
 }
 
-body:has(.splashScreen) {
+body:has(.explodeScreen) {
 	animation-name: explode;
 	animation-iteration-count: 6;
 	animation-timing-function: linear;
