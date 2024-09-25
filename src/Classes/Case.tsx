@@ -46,7 +46,7 @@ class Case extends Component<IProps, IState> {
 				}}
 				onDragStart={e => e.preventDefault()}
 				onClick={() => this.mine({ force: false })}
-				className="case"
+				className="Case"
 			>
 				<CaseImageChanger ref={this.imageRef} />
 			</div>
