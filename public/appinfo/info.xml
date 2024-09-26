@@ -8,7 +8,7 @@
 # Minesweeper
 A Nextcloud home-made Minesweeper.
     ]]></description>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <licence>agpl</licence>
     <author mail="enee.diiorio@gmail.com" homepage="https://UnelDev.github.io">UnelDev</author>
     <namespace>Minesweeper</namespace>
