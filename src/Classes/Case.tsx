@@ -58,14 +58,19 @@ class Case extends Component<IProps, IState> {
 
 		if (this.isBombed) {
 			this.imageRef.current?.changeImage('bomb');
-			this.setState({
-				status: 'visible'
-			});
 
+			this.setState(
+				{
+					status: 'visible'
+				},
+				() => {
+					if (callExplode) {
+						this.props.explode();
+					}
+				}
+			);
 			// if not called by an explosion we do boom
-			if (callExplode) {
-				this.props.explode();
-			}
+
 			return;
 		} else {
 			this.imageRef.current?.changeImage(this.proximity.toString());

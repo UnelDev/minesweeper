@@ -20,7 +20,7 @@ class SplashScreen extends Component<IProps, IState> {
 	}
 
 	win() {
-		this.setState({ content: <div className="splashScreen"></div> });
+		this.setState({ content: <div className="splashScreen winScreen"></div> });
 	}
 
 	render() {

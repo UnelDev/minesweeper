@@ -60,23 +60,72 @@ class Board extends Component<IProps, IState> {
 	}
 
 	lose() {
-		this.discoverBombs(true);
+		this.discoverBoard(true);
 		this.state.CounterRef.current!.stop();
 		this.state.SplashRef.current!.lose();
 		this.setState({ gameover: 'You lose !' });
 	}
 
 	win() {
-		this.discoverBombs(false);
+		this.discoverBoard(false);
 		this.state.CounterRef.current!.stop();
 		this.state.SplashRef.current!.win();
 		this.setState({ gameover: 'You win !' });
 	}
 
-	discoverBombs(mineFlagged: boolean) {
-		this.boardRef.forEach(val => {
-			val.current!.mine(mineFlagged, false, false);
-		});
+	discoverBoard(mineFlagged: boolean) {
+		if (mineFlagged) {
+			// find the first visible bombed case
+			const index = this.boardRef.findIndex(
+				val => val.current?.getBombed() && val.current?.getStatus() === 'visible'
+			);
+
+			const board = Array<Array<RefObject<Case>>>();
+			for (let i = 0; i < this.height; i++) {
+				const row = new Array<RefObject<Case>>();
+				for (let j = 0; j < this.width; j++) {
+					row.push(this.boardRef[i * this.width + j]);
+				}
+				board.push(row);
+			}
+
+			const centerX = Math.floor(index / this.width); // Calculate x position of the bomb
+			const centerY = index % this.width; // Calculate y position of the bomb
+			const maxRayon = Math.ceil(Math.sqrt(this.width * this.width + this.height * this.height)); // Precompute max radius
+
+			let rayon = 0;
+
+			// Start interval to propagate the wave
+			const interval = setInterval(() => {
+				for (let i = -rayon; i <= rayon; i++) {
+					for (let j = -rayon; j <= rayon; j++) {
+						// Only target the cells at the exact distance of the current radius
+						if (Math.abs(i) + Math.abs(j) === rayon) {
+							const targetX = centerX + i;
+							const targetY = centerY + j;
+
+							// Check boundaries to ensure the cell is within the grid
+							if (targetX >= 0 && targetX < this.height && targetY >= 0 && targetY < this.width) {
+								// Trigger the 'mine' action on the cell
+								board[targetX][targetY]?.current?.mine(mineFlagged, false, false);
+							}
+						}
+					}
+				}
+
+				// Increase the radius for the next iteration
+				rayon++;
+
+				// Stop the interval once the wave covers the entire board
+				if (rayon > maxRayon) {
+					clearInterval(interval);
+				}
+			}, 100);
+		} else {
+			this.boardRef.forEach(val => {
+				val.current?.mine(false, false, false);
+			});
+		}
 	}
 
 	discoverEmptyCases() {

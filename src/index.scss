@@ -97,12 +97,19 @@ body:has(.explodeScreen) {
 	animation-duration: 100ms;
 }
 
+.explodeScreen {
+	background-color: rgba(255, 200, 200, 0.3);
+}
+
+.winScreen {
+	background-color: rgba(207, 255, 200, 0.3);
+}
+
 .splashScreen {
 	grid-area: 1 / 1;
 	z-index: 1;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(255, 255, 255, 0.3);
 	cursor: not-allowed;
 }
 
