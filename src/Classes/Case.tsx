@@ -1,5 +1,7 @@
 import { Component, createRef, RefObject } from 'react';
+
 import CaseImageChanger from '../Components/CaseImage';
+import ParticleExplosion from './Particles';
 
 interface IState {
 	status: caseStatus;
@@ -14,6 +16,7 @@ interface IProps {
 
 class Case extends Component<IProps, IState> {
 	private isBombed: boolean;
+	private particles: JSX.Element;
 	proximity: number;
 	imageRef: RefObject<CaseImageChanger>;
 
@@ -23,6 +26,7 @@ class Case extends Component<IProps, IState> {
 		this.state = { status: 'hidden' };
 		this.proximity = 0;
 		this.imageRef = createRef();
+		this.particles = <></>;
 	}
 
 	getStatus() {
@@ -37,23 +41,12 @@ class Case extends Component<IProps, IState> {
 		this.proximity++;
 	}
 
-	render() {
-		return (
-			<div
-				onContextMenu={e => {
-					this.flag();
-					e.preventDefault();
-				}}
-				onDragStart={e => e.preventDefault()}
-				onClick={() => this.mine(false, true, true)}
-				className="Case"
-			>
-				<CaseImageChanger ref={this.imageRef} />
-			</div>
-		);
-	}
-
-	mine(mineFlagged: boolean = false, callExplode: boolean = true, discover: boolean = false) {
+	mine(
+		mineFlagged: boolean = false,
+		callExplode: boolean = true,
+		discover: boolean = false,
+		e: { x: number; y: number } | undefined = undefined
+	) {
 		if (!mineFlagged && this.getStatus() === 'flagged') return;
 
 		if (this.isBombed) {
@@ -70,7 +63,12 @@ class Case extends Component<IProps, IState> {
 				}
 			);
 			// if not called by an explosion we do boom
-
+			if (callExplode) {
+				if (e) {
+					this.particles = <ParticleExplosion e={e} />;
+				}
+				this.props.explode();
+			}
 			return;
 		} else {
 			this.imageRef.current?.changeImage(this.proximity.toString());
@@ -102,6 +100,23 @@ class Case extends Component<IProps, IState> {
 				status: 'flagged'
 			});
 		}
+	}
+
+	render() {
+		return (
+			<div
+				onContextMenu={e => {
+					this.flag();
+					e.preventDefault();
+				}}
+				onDragStart={e => e.preventDefault()}
+				onClick={e => this.mine(false, true, true, { x: e.clientX, y: e.clientY })}
+				className="Case"
+			>
+				<CaseImageChanger ref={this.imageRef} />
+				{this.particles}
+			</div>
+		);
 	}
 }
 
