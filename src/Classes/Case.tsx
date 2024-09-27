@@ -47,7 +47,7 @@ class Case extends Component<IProps, IState> {
 		discover: boolean = false,
 		e: { x: number; y: number } | undefined = undefined
 	) {
-		if (!mineFlagged && this.getStatus() === 'flagged') return;
+		if ((!mineFlagged && this.getStatus() === 'flagged') || this.getStatus() === 'visible') return;
 
 		if (this.isBombed) {
 			this.imageRef.current?.changeImage('bomb');

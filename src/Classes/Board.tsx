@@ -1,11 +1,10 @@
 import { Component, createRef, RefObject } from 'react';
 
-import Case from './Case';
-import shuffleBoard from '../Utils/shuffleBoard';
 import doNearCases from '../Utils/doNearCases';
+import shuffleBoard from '../Utils/shuffleBoard';
+import Case from './Case';
 import Counter from './Counter';
 import SplashScreen from './SplashScreen';
-import debug from '../Utils/debug';
 
 interface IProps {
 	bombCount: number;
@@ -62,74 +61,54 @@ class Board extends Component<IProps, IState> {
 
 	lose() {
 		this.state.CounterRef.current!.stop();
-		this.discoverBoard(true);
 		this.state.SplashRef.current!.lose();
+		this.explodeBoard();
 		this.setState({ gameover: 'You lose !' });
 	}
 
 	win() {
 		this.state.CounterRef.current!.stop();
-		this.discoverBoard(false);
+		this.discoverBoard();
 		this.state.SplashRef.current!.win();
 		this.setState({ gameover: 'You win !' });
 	}
 
-	discoverBoard(mineFlagged: boolean) {
-		if (mineFlagged) {
-			// Find the first visible cell that contains a bomb
-			const index = this.boardRef.findIndex(
-				val => val.current?.getBombed() && val.current?.getStatus() === 'visible'
-			);
+	explodeBoard() {
+		const index = this.boardRef.findIndex(
+			val => val.current?.getBombed() && val.current?.getStatus() === 'visible'
+		);
 
-			// If no bomb is found (to avoid errors)
-			if (index === -1) {
-				return;
+		if (index === -1) return;
+
+		const next = new Array<number>();
+		next.push(index);
+		let i = 0;
+
+		const interval = setInterval(() => {
+			const newGeneration = new Array<number>();
+
+			while (i < next.length) {
+				doNearCases(next[i], this.width, this.height, neighborIndex => {
+					if (next.includes(neighborIndex)) return;
+					this.boardRef.at(neighborIndex)?.current?.mine(false, false, false);
+					newGeneration.push(neighborIndex);
+				});
+
+				i++;
 			}
 
-			// Calculate the x and y coordinates of the bomb (center of explosion)
-			const bombX = Math.floor(index / this.width); // X position
-			const bombY = index % this.width; // Y position
-			const maxRadius = Math.ceil(Math.sqrt(this.width * this.width + this.height * this.height)); // Maximum radius based on the grid size
+			if (newGeneration.length === 0) {
+				clearInterval(interval);
+			} else {
+				next.push(...newGeneration);
+			}
+		}, 100);
+	}
 
-			let radius = 0;
-
-			// Trigger a "wave" propagation starting from the center of the explosion
-			const interval = setInterval(() => {
-				for (let i = -radius; i <= radius; i++) {
-					// Target only cells at the exact distance of the current radius (Manhattan distance)
-					for (let j = -radius; j <= radius; j++) {
-						if (Math.abs(i) + Math.abs(j) === radius) {
-							const targetX = bombX + i;
-							const targetY = bombY + j;
-
-							// Check if the coordinates are within grid limits
-							if (targetX >= 0 && targetX < this.height && targetY >= 0 && targetY < this.width) {
-								const targetIndex = targetX * this.width + targetY; // Calculate linear index
-
-								// If the cell is not yet revealed
-								if (this.boardRef[targetIndex]?.current?.getStatus() !== 'visible') {
-									// Trigger the "mine" action on the cell
-									this.boardRef[targetIndex]?.current?.mine(mineFlagged, false, false);
-								}
-							}
-						}
-					}
-				}
-
-				// Increase the radius for the next iteration
-				radius++;
-
-				// Stop the propagation once the wave covers the entire grid
-				if (radius > maxRadius) {
-					clearInterval(interval);
-				}
-			}, 80);
-		} else {
-			// Reveal all cells if the game is won
-			this.boardRef.forEach(val => {
-				val.current?.mine(false, false, false);
-			});
-		}
+	discoverBoard() {
+		this.boardRef.forEach(val => {
+			val.current?.mine(false, false, false);
+		});
 	}
 
 	discoverEmptyCases() {
