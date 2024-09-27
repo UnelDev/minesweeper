@@ -169,11 +169,11 @@ class Board extends Component<IProps, IState> {
 
 	render() {
 		return (
-			<div className="game">
-				<menu>
+			<div className="Game">
+				<div className="CounterContainer">
 					<Counter start={() => this.restart()} ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
 					<div className="text">{this.state.gameover}</div>
-				</menu>
+				</div>
 				<div className="BoardContainer">
 					<div
 						className="Board"
