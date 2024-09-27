@@ -88,11 +88,17 @@ class Board extends Component<IProps, IState> {
 			const newGeneration = new Array<number>();
 
 			while (i < next.length) {
-				doNearCases(next[i], this.width, this.height, neighborIndex => {
-					if (next.includes(neighborIndex)) return;
-					this.boardRef.at(neighborIndex)?.current?.mine(false, false, false);
-					newGeneration.push(neighborIndex);
-				});
+				doNearCases(
+					next[i],
+					this.width,
+					this.height,
+					neighborIndex => {
+						if (next.includes(neighborIndex)) return;
+						this.boardRef.at(neighborIndex)?.current?.mine(false, false, false);
+						newGeneration.push(neighborIndex);
+					},
+					false
+				);
 
 				i++;
 			}
@@ -102,7 +108,7 @@ class Board extends Component<IProps, IState> {
 			} else {
 				next.push(...newGeneration);
 			}
-		}, 100);
+		}, 80);
 	}
 
 	discoverBoard() {

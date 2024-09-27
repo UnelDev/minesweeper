@@ -1,4 +1,10 @@
-function doNearCases(index: number, width: number, height: number, callback: (index: number) => void) {
+function doNearCases(
+	index: number,
+	width: number,
+	height: number,
+	callback: (index: number) => void,
+	doAngles: boolean = true
+) {
 	const x = index % width;
 	const y = Math.floor(index / width);
 
@@ -6,12 +12,12 @@ function doNearCases(index: number, width: number, height: number, callback: (in
 	if (y !== 0) {
 		callback(index - width);
 		//not in the first column
-		if (x !== 0) {
+		if (doAngles && x !== 0) {
 			callback(index - width - 1);
 		}
 
 		//not in the last column
-		if (x !== width - 1) {
+		if (doAngles && x !== width - 1) {
 			callback(index - width + 1);
 		}
 	}
@@ -20,12 +26,12 @@ function doNearCases(index: number, width: number, height: number, callback: (in
 	if (y !== height - 1) {
 		callback(index + width);
 		//not in the first column
-		if (x !== 0) {
+		if (doAngles && x !== 0) {
 			callback(index + width - 1);
 		}
 
 		//not in the last column
-		if (x !== width - 1) {
+		if (doAngles && x !== width - 1) {
 			callback(index + width + 1);
 		}
 	}
