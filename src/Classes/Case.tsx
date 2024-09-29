@@ -1,10 +1,11 @@
-import { Component, createRef, RefObject } from 'react';
+import { PureComponent, createRef, RefObject } from 'react';
 
 import CaseImageChanger from '../Components/CaseImage';
 import ParticleExplosion from './Particles';
 
 interface IState {
 	status: caseStatus;
+	particles: JSX.Element;
 }
 
 interface IProps {
@@ -14,19 +15,17 @@ interface IProps {
 	explode: () => void;
 }
 
-class Case extends Component<IProps, IState> {
+class Case extends PureComponent<IProps, IState> {
 	private isBombed: boolean;
-	private particles: JSX.Element;
 	proximity: number;
 	imageRef: RefObject<CaseImageChanger>;
 
 	constructor(props: IProps) {
 		super(props);
 		this.isBombed = props.isBombed;
-		this.state = { status: 'hidden' };
+		this.state = { status: 'hidden', particles: <></> };
 		this.proximity = 0;
 		this.imageRef = createRef();
-		this.particles = <></>;
 	}
 
 	getStatus() {
@@ -50,37 +49,31 @@ class Case extends Component<IProps, IState> {
 		if ((!mineFlagged && this.getStatus() === 'flagged') || this.getStatus() === 'visible') return;
 
 		if (this.isBombed) {
-			this.imageRef.current?.changeImage('bomb');
+			if (this.getStatus() !== 'visible') {
+				this.imageRef.current?.changeImage('bomb');
 
-			this.setState(
-				{
-					status: 'visible'
-				},
-				() => {
+				this.setState({ status: 'visible' }, () => {
 					if (callExplode) {
 						this.props.explode();
 					}
-				}
-			);
-			// if not called by an explosion we do boom
-			if (callExplode) {
-				if (e) {
-					this.particles = <ParticleExplosion e={e} />;
-				}
+				});
+			}
+
+			if (callExplode && e) {
+				this.setState({ particles: <ParticleExplosion e={e} /> });
 				this.props.explode();
 			}
 			return;
-		} else {
+		}
+
+		if (this.getStatus() !== 'visible') {
 			this.imageRef.current?.changeImage(this.proximity.toString());
-			this.setState(
-				{
-					status: 'visible'
-				},
-				() => {
-					if (discover) this.props.discover();
+
+			this.setState({ status: 'visible' }, () => {
+				if (discover) {
+					this.props.discover();
 				}
-			);
-			return;
+			});
 		}
 	}
 
@@ -105,19 +98,27 @@ class Case extends Component<IProps, IState> {
 	render() {
 		return (
 			<div
-				onContextMenu={e => {
-					this.flag();
-					e.preventDefault();
-				}}
-				onDragStart={e => e.preventDefault()}
-				onClick={e => this.mine(false, true, true, { x: e.clientX, y: e.clientY })}
+				onContextMenu={this.handleContextMenu}
+				onDragStart={this.preventDrag}
+				onClick={this.handleClick}
 				className="Case"
 			>
 				<CaseImageChanger ref={this.imageRef} />
-				{this.particles}
+				{this.state.particles}
 			</div>
 		);
 	}
+
+	handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+		this.flag();
+		e.preventDefault();
+	};
+
+	preventDrag = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
+
+	handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		this.mine(false, true, true, { x: e.clientX, y: e.clientY });
+	};
 }
 
 export default Case;

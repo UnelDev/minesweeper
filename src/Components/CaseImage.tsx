@@ -1,4 +1,4 @@
-import { Component, createElement, ReactElement } from 'react';
+import { PureComponent, createElement, ReactElement } from 'react';
 
 interface IState {
 	images: Map<string, ReactElement>;
@@ -7,7 +7,7 @@ interface IState {
 
 interface IProps {}
 
-class CaseImageChanger extends Component<IProps, IState> {
+class CaseImageChanger extends PureComponent<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 		this.state = {
@@ -19,44 +19,43 @@ class CaseImageChanger extends Component<IProps, IState> {
 	componentDidMount() {
 		this.preloadImages(
 			new Map([
-				['0.png', '0'],
-				['1.png', '1'],
-				['2.png', '2'],
-				['3.png', '3'],
-				['4.png', '4'],
-				['5.png', '5'],
-				['6.png', '6'],
-				['7.png', '7'],
-				['8.png', '8'],
-				['bomb.png', 'bomb'],
-				['flag.png', 'flag'],
-				['full.png', 'full']
+				['0', '0.png'],
+				['1', '1.png'],
+				['2', '2.png'],
+				['3', '3.png'],
+				['4', '4.png'],
+				['5', '5.png'],
+				['6', '6.png'],
+				['7', '7.png'],
+				['8', '8.png'],
+				['bomb', 'bomb.png'],
+				['flag', 'flag.png'],
+				['full', 'full.png']
 			])
 		);
 	}
 
 	preloadImages(imageList: Map<string, string>) {
 		const images = new Map<string, ReactElement>();
-		imageList.forEach((id, imageSrc) => {
-			const img = createElement('img', { src: 'Assets/' + imageSrc });
+		imageList.forEach((src, id) => {
+			const img = createElement('img', { src: `Assets/${src}` });
 			images.set(id, img);
 		});
 		this.setState({ images });
 	}
 
 	changeImage(imageId: string) {
-		if (imageId === this.state.currentImage) return;
-		if (this.state.images.get(imageId)) {
-			this.setState({ currentImage: imageId });
-		}
+		const newImage = this.state.images.get(imageId);
+		if (!newImage || imageId === this.state.currentImage) return;
+		this.setState({ currentImage: imageId });
 	}
 
 	private getCurrentImage() {
-		return this.state.images.get(this.state.currentImage) ?? <></>;
+		return this.state.images.get(this.state.currentImage) || null;
 	}
 
 	render() {
-		return <>{this.getCurrentImage()}</>;
+		return this.getCurrentImage();
 	}
 }
 

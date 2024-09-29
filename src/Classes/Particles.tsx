@@ -41,7 +41,7 @@ class Particle {
 
 function ParticleExplosion({ e }: { e: { x: number; y: number } }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const particlesRef = useRef<Particle[]>([]);
+	const particlesRef = useRef<Array<Particle>>([]);
 	const [content, setContent] = useState(<canvas className="ExplosionCanva" ref={canvasRef} />);
 
 	useEffect(() => {

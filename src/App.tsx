@@ -7,7 +7,11 @@ function App() {
 	const [content, setContent] = useState(<Menu click={click} />);
 
 	function start(bombs: number, height: number, width: number) {
-		setContent(<Board start={start} bombCount={bombs} height={height} width={width} key={Date.now()} />);
+		setContent(
+			<div className="App">
+				<Board start={start} bombCount={bombs} height={height} width={width} key={Date.now()} />
+			</div>
+		);
 	}
 
 	function click() {
@@ -17,7 +21,7 @@ function App() {
 		start(bombs, height, width);
 	}
 
-	return <div className="App">{content}</div>;
+	return content;
 }
 
 export default App;

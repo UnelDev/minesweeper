@@ -80,11 +80,19 @@ class Board extends Component<IProps, IState> {
 
 		if (index === -1) return;
 
-		const next = new Array<number>();
-		next.push(index);
+		const next = [index];
+		const visited = new Set(next);
 		let i = 0;
+		let lastTimestamp = 0;
+		const delay = 80;
 
-		const interval = setInterval(() => {
+		const processGeneration = (timestamp: number) => {
+			if (timestamp - lastTimestamp < delay) {
+				requestAnimationFrame(processGeneration);
+				return;
+			}
+			lastTimestamp = timestamp;
+
 			const newGeneration = new Array<number>();
 
 			while (i < next.length) {
@@ -93,22 +101,26 @@ class Board extends Component<IProps, IState> {
 					this.width,
 					this.height,
 					neighborIndex => {
-						if (next.includes(neighborIndex)) return;
+						if (visited.has(neighborIndex)) return;
 						this.boardRef.at(neighborIndex)?.current?.mine(false, false, false);
 						newGeneration.push(neighborIndex);
+						visited.add(neighborIndex);
 					},
 					false
 				);
-
 				i++;
 			}
 
 			if (newGeneration.length === 0) {
-				clearInterval(interval);
+				return;
 			} else {
 				next.push(...newGeneration);
+				i = 0;
+				requestAnimationFrame(processGeneration);
 			}
-		}, 80);
+		};
+
+		requestAnimationFrame(processGeneration);
 	}
 
 	discoverBoard() {
@@ -120,6 +132,8 @@ class Board extends Component<IProps, IState> {
 	discoverEmptyCases() {
 		const stack = new Array<number>();
 		let nbMined = 0;
+		const mined = new Set<number>();
+
 		this.boardRef.forEach((val, i) => {
 			const cell = val.current!;
 			if (cell.getStatus() === 'visible') nbMined++;
@@ -129,36 +143,39 @@ class Board extends Component<IProps, IState> {
 			}
 		});
 
-		const mined = new Array<number>();
-		for (let i = 0; i < stack.length; i++) {
-			const index = stack[i];
+		while (stack.length > 0) {
+			const index = stack.pop()!;
 			let localNbMined = nbMined;
+
 			doNearCases(index, this.width, this.height, (newIndex: number) => {
+				if (mined.has(newIndex)) return;
 				const cell = this.boardRef.at(newIndex)?.current!;
-				if (cell.getStatus() !== 'hidden' || mined.includes(newIndex)) return;
-				mined.push(newIndex);
+
+				if (cell.getStatus() !== 'hidden') return;
+
+				mined.add(newIndex);
 				localNbMined++;
 				cell.mine(false, true, false);
-				if (cell.proximity === 0 && !stack.includes(newIndex)) {
+
+				if (cell.proximity === 0) {
 					stack.push(newIndex);
 				}
 			});
+
 			nbMined = localNbMined;
 		}
 
 		if (nbMined === this.height * this.width - this.props.bombCount) {
 			this.win();
-			return;
 		}
 	}
 
 	componentDidMount() {
 		this.boardRef.forEach((val, i) => {
 			if (val.current?.getBombed()) {
-				const callback = (index: number) => {
+				doNearCases(i, this.width, this.height, index => {
 					this.boardRef.at(index)?.current?.increaseProximity();
-				};
-				doNearCases(i, this.width, this.height, callback);
+				});
 			}
 		});
 	}
@@ -172,7 +189,7 @@ class Board extends Component<IProps, IState> {
 			<div className="Game">
 				<div className="CounterContainer">
 					<Counter start={() => this.restart()} ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
-					<div className="text">{this.state.gameover}</div>
+					<div>{this.state.gameover}</div>
 				</div>
 				<div className="BoardContainer">
 					<div
