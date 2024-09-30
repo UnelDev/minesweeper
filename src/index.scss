@@ -71,10 +71,6 @@ input {
 	grid-template-rows: 1fr;
 	border-radius: 5px;
 	overflow: scroll;
-	aspect-ratio: 1 / 1;
-
-	max-width: 100%;
-	max-height: 100%;
 }
 
 .Board {
@@ -97,8 +93,8 @@ input {
 }
 
 .Case {
-	min-height: 2vmax;
-	max-height: 5vmax;
+	min-height: 3vmin;
+	max-height: 7vmin;
 
 	aspect-ratio: 1 / 1;
 
@@ -112,6 +108,12 @@ input {
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
+}
+
+.CounterText {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5vh;
 }
 
 body:has(.explodeScreen) {

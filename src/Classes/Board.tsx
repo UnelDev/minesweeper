@@ -7,9 +7,7 @@ import Counter from './Counter';
 import SplashScreen from './SplashScreen';
 
 interface IProps {
-	bombCount: number;
-	width: number;
-	height: number;
+	values: BoardValues;
 	start: (values: BoardValues) => void;
 }
 
@@ -29,10 +27,10 @@ class Board extends PureComponent<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 
-		this.height = this.props.height;
-		this.width = this.props.width;
+		this.height = this.props.values.height;
+		this.width = this.props.values.width;
 		this.state = {
-			nbBombed: this.props.bombCount,
+			nbBombed: this.props.values.bombs,
 			gameover: '',
 			CounterRef: createRef(),
 			SplashRef: createRef()
@@ -40,7 +38,7 @@ class Board extends PureComponent<IProps, IState> {
 
 		const size = this.height * this.width;
 		for (let i = 0; i < size; i++) {
-			const isBombed = i < this.props.bombCount;
+			const isBombed = i < this.props.values.bombs;
 			this.boardRef.push(createRef());
 			this.board.push(
 				<Case
@@ -165,14 +163,14 @@ class Board extends PureComponent<IProps, IState> {
 			nbMined = localNbMined;
 		}
 
-		if (nbMined === this.height * this.width - this.props.bombCount) {
+		if (nbMined === this.height * this.width - this.props.values.bombs) {
 			this.win();
 		}
 	}
 
 	componentDidMount() {
 		(document.querySelector('.Board') as HTMLDivElement).style.setProperty('--columns', this.width.toString());
-		(document.querySelector('.Board') as HTMLDivElement).style.setProperty('--columns', this.height.toString());
+		(document.querySelector('.Board') as HTMLDivElement).style.setProperty('--rows', this.height.toString());
 		this.boardRef.forEach((val, i) => {
 			if (val.current?.getBombed()) {
 				doNearCases(i, this.width, this.height, index => {
@@ -183,7 +181,7 @@ class Board extends PureComponent<IProps, IState> {
 	}
 
 	restart() {
-		this.props.start({ bombs: this.props.bombCount, height: this.height, width: this.width });
+		this.props.start(this.props.values);
 	}
 
 	render() {

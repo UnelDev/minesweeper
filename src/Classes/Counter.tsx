@@ -35,7 +35,7 @@ class Counter extends Component<IProps, IState> {
 	render() {
 		return (
 			<div className="Counter">
-				<div>
+				<div className="CounterText">
 					<div className="timer">Time: {clearTime(this.state.time)}</div>
 					<div className="bombCounter">Bomb left: {this.props.nbBombed}</div>
 				</div>

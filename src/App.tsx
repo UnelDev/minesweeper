@@ -9,13 +9,7 @@ function App() {
 	const start = useCallback((values: BoardValues) => {
 		setContent(
 			<div className="App">
-				<Board
-					start={start}
-					bombCount={values.bombs}
-					height={values.height}
-					width={values.width}
-					key={Date.now()}
-				/>
+				<Board start={start} values={values} key={Date.now()} />
 			</div>
 		);
 	}, []);
