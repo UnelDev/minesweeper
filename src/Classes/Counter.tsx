@@ -40,7 +40,9 @@ class Counter extends Component<IProps, IState> {
 					<div className="bombCounter">Bomb left: {this.props.nbBombed}</div>
 				</div>
 				<div>
-					<button onClick={this.props.start}>Restart</button>
+					<button className="RestartButton" onClick={this.props.start}>
+						Restart
+					</button>
 				</div>
 			</div>
 		);
