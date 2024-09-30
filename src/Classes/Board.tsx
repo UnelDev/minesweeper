@@ -171,6 +171,8 @@ class Board extends Component<IProps, IState> {
 	}
 
 	componentDidMount() {
+		(document.querySelector('.Board') as HTMLDivElement).style.setProperty('--columns', this.width.toString());
+		(document.querySelector('.Board') as HTMLDivElement).style.setProperty('--columns', this.height.toString());
 		this.boardRef.forEach((val, i) => {
 			if (val.current?.getBombed()) {
 				doNearCases(i, this.width, this.height, index => {
@@ -192,15 +194,7 @@ class Board extends Component<IProps, IState> {
 					<div>{this.state.gameover}</div>
 				</div>
 				<div className="BoardContainer">
-					<div
-						className="Board"
-						style={{
-							gridTemplateColumns: `repeat(${this.width}, 1fr)`,
-							gridTemplateRows: `repeat(${this.height}, 1fr)`
-						}}
-					>
-						{this.board}
-					</div>
+					<div className="Board">{this.board}</div>
 					<SplashScreen ref={this.state.SplashRef} />
 				</div>
 			</div>
