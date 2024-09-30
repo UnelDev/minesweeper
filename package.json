@@ -5,7 +5,7 @@
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"react-scripts": "5.0.1",
-		"sass": "^1.79.3"
+		"sass": "^1.79.4"
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -31,7 +31,7 @@
 	},
 	"devDependencies": {
 		"@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-		"@types/react": "^18.3.9",
+		"@types/react": "^18.3.10",
 		"@types/react-dom": "^18.3.0"
 	}
 }
