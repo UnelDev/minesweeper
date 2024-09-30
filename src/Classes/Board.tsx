@@ -1,4 +1,4 @@
-import { Component, createRef, RefObject } from 'react';
+import { PureComponent, createRef, RefObject } from 'react';
 
 import doNearCases from '../Utils/doNearCases';
 import shuffleBoard from '../Utils/shuffleBoard';
@@ -10,7 +10,7 @@ interface IProps {
 	bombCount: number;
 	width: number;
 	height: number;
-	start: (bombs: number, height: number, width: number) => void;
+	start: (values: BoardValues) => void;
 }
 
 interface IState {
@@ -20,7 +20,7 @@ interface IState {
 	SplashRef: RefObject<SplashScreen>;
 }
 
-class Board extends Component<IProps, IState> {
+class Board extends PureComponent<IProps, IState> {
 	private boardRef: Array<RefObject<Case>> = [];
 	private board: Array<JSX.Element> = [];
 	height: number;
@@ -131,14 +131,14 @@ class Board extends Component<IProps, IState> {
 
 	discoverEmptyCases() {
 		const stack = new Array<number>();
-		let nbMined = 0;
 		const mined = new Set<number>();
+		let nbMined = 0;
 
 		this.boardRef.forEach((val, i) => {
 			const cell = val.current!;
 			if (cell.getStatus() === 'visible') nbMined++;
 
-			if (!cell.getBombed() && cell.proximity === 0 && cell.getStatus() === 'visible') {
+			if (!cell.getBombed() && cell.getProximity() === 0 && cell.getStatus() === 'visible') {
 				stack.push(i);
 			}
 		});
@@ -157,7 +157,7 @@ class Board extends Component<IProps, IState> {
 				localNbMined++;
 				cell.mine(false, true, false);
 
-				if (cell.proximity === 0) {
+				if (cell.getProximity() === 0) {
 					stack.push(newIndex);
 				}
 			});
@@ -183,7 +183,7 @@ class Board extends Component<IProps, IState> {
 	}
 
 	restart() {
-		this.props.start(this.props.bombCount, this.height, this.width);
+		this.props.start({ bombs: this.props.bombCount, height: this.height, width: this.width });
 	}
 
 	render() {

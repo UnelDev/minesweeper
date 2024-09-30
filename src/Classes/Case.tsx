@@ -17,7 +17,7 @@ interface IProps {
 
 class Case extends PureComponent<IProps, IState> {
 	private isBombed: boolean;
-	proximity: number;
+	private proximity: number;
 	imageRef: RefObject<CaseImageChanger>;
 
 	constructor(props: IProps) {
@@ -26,6 +26,10 @@ class Case extends PureComponent<IProps, IState> {
 		this.state = { status: 'hidden', particles: <></> };
 		this.proximity = 0;
 		this.imageRef = createRef();
+	}
+
+	getProximity() {
+		return this.proximity;
 	}
 
 	getStatus() {
@@ -49,25 +53,19 @@ class Case extends PureComponent<IProps, IState> {
 		if ((!mineFlagged && this.getStatus() === 'flagged') || this.getStatus() === 'visible') return;
 
 		if (this.isBombed) {
-			if (this.getStatus() !== 'visible') {
-				this.imageRef.current?.changeImage('bomb');
+			this.changeImage('bomb');
 
-				this.setState({ status: 'visible' }, () => {
-					if (callExplode) {
+			this.setState({ status: 'visible' }, () => {
+				if (callExplode) {
+					this.props.explode();
+					if (e) {
+						this.setState({ particles: <ParticleExplosion e={e} /> });
 						this.props.explode();
 					}
-				});
-			}
-
-			if (callExplode && e) {
-				this.setState({ particles: <ParticleExplosion e={e} /> });
-				this.props.explode();
-			}
-			return;
-		}
-
-		if (this.getStatus() !== 'visible') {
-			this.imageRef.current?.changeImage(this.proximity.toString());
+				}
+			});
+		} else {
+			this.changeImage(this.proximity.toString());
 
 			this.setState({ status: 'visible' }, () => {
 				if (discover) {
@@ -81,19 +79,34 @@ class Case extends PureComponent<IProps, IState> {
 		if (this.getStatus() === 'visible') return;
 
 		if (this.getStatus() === 'flagged') {
-			this.imageRef.current?.changeImage('full');
+			this.changeImage('full');
 			this.props.addBombLeft(1);
 			this.setState({
 				status: 'hidden'
 			});
 		} else {
-			this.imageRef.current?.changeImage('flag');
+			this.changeImage('flag');
 			this.props.addBombLeft(-1);
 			this.setState({
 				status: 'flagged'
 			});
 		}
 	}
+
+	private changeImage(image: string) {
+		this.imageRef.current!.changeImage(image);
+	}
+
+	handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+		this.flag();
+		e.preventDefault();
+	};
+
+	preventDrag = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
+
+	handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		this.mine(false, true, true, { x: e.clientX, y: e.clientY });
+	};
 
 	render() {
 		return (
@@ -108,17 +121,6 @@ class Case extends PureComponent<IProps, IState> {
 			</div>
 		);
 	}
-
-	handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
-		this.flag();
-		e.preventDefault();
-	};
-
-	preventDrag = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
-
-	handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-		this.mine(false, true, true, { x: e.clientX, y: e.clientY });
-	};
 }
 
 export default Case;
