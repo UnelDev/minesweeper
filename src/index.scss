@@ -85,13 +85,6 @@ input {
 	grid-template-rows: repeat(var(--rows), 1fr);
 }
 
-.CounterContainer {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .Case {
 	min-height: 3vmin;
 	max-height: 7vmin;

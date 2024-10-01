@@ -18,7 +18,7 @@ interface IProps {
 class Case extends PureComponent<IProps, IState> {
 	private isBombed: boolean;
 	private proximity: number;
-	imageRef: RefObject<CaseImageChanger>;
+	private imageRef: RefObject<CaseImageChanger>;
 
 	constructor(props: IProps) {
 		super(props);
@@ -97,14 +97,14 @@ class Case extends PureComponent<IProps, IState> {
 		this.imageRef.current!.changeImage(image);
 	}
 
-	handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+	private handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
 		this.flag();
 		e.preventDefault();
 	};
 
-	preventDrag = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
+	private preventDrag = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
 
-	handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+	private handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		this.mine(false, true, true, { x: e.clientX, y: e.clientY });
 	};
 

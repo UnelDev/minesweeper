@@ -13,14 +13,14 @@ interface IProps {
 
 interface IState {
 	nbBombed: number;
-	gameover: string;
 	CounterRef: RefObject<Counter>;
 	SplashRef: RefObject<SplashScreen>;
 }
 
 class Board extends PureComponent<IProps, IState> {
-	private boardRef: Array<RefObject<Case>> = [];
-	private board: Array<JSX.Element> = [];
+	private boardRef = createRef<HTMLDivElement>();
+	private casesRef: Array<RefObject<Case>> = [];
+	private cases: Array<JSX.Element> = [];
 	height: number;
 	width: number;
 
@@ -31,7 +31,6 @@ class Board extends PureComponent<IProps, IState> {
 		this.width = this.props.values.width;
 		this.state = {
 			nbBombed: this.props.values.bombs,
-			gameover: '',
 			CounterRef: createRef(),
 			SplashRef: createRef()
 		};
@@ -39,40 +38,38 @@ class Board extends PureComponent<IProps, IState> {
 		const size = this.height * this.width;
 		for (let i = 0; i < size; i++) {
 			const isBombed = i < this.props.values.bombs;
-			this.boardRef.push(createRef());
-			this.board.push(
+			this.casesRef.push(createRef());
+			this.cases.push(
 				<Case
 					explode={this.lose.bind(this)}
 					addBombLeft={(value: number) => this.setState({ nbBombed: this.state.nbBombed + value })}
 					discover={this.discoverEmptyCases.bind(this)}
 					key={i}
-					ref={this.boardRef[i]}
+					ref={this.casesRef[i]}
 					isBombed={isBombed}
 				/>
 			);
 		}
 
-		const { board, boardRef } = shuffleBoard(this.board, this.boardRef);
-		this.board = board;
-		this.boardRef = boardRef;
+		const { board, boardRef } = shuffleBoard(this.cases, this.casesRef);
+		this.cases = board;
+		this.casesRef = boardRef;
 	}
 
 	lose() {
 		this.state.CounterRef.current!.stop();
 		this.state.SplashRef.current!.lose();
 		this.explodeBoard();
-		this.setState({ gameover: 'You lose !' });
 	}
 
 	win() {
 		this.state.CounterRef.current!.stop();
 		this.discoverBoard();
 		this.state.SplashRef.current!.win();
-		this.setState({ gameover: 'You win !' });
 	}
 
 	explodeBoard() {
-		const index = this.boardRef.findIndex(
+		const index = this.casesRef.findIndex(
 			val => val.current?.getBombed() && val.current?.getStatus() === 'visible'
 		);
 
@@ -100,7 +97,7 @@ class Board extends PureComponent<IProps, IState> {
 					this.height,
 					neighborIndex => {
 						if (visited.has(neighborIndex)) return;
-						this.boardRef.at(neighborIndex)?.current?.mine(false, false, false);
+						this.casesRef.at(neighborIndex)?.current?.mine(false, false, false);
 						newGeneration.push(neighborIndex);
 						visited.add(neighborIndex);
 					},
@@ -122,7 +119,7 @@ class Board extends PureComponent<IProps, IState> {
 	}
 
 	discoverBoard() {
-		this.boardRef.forEach(val => {
+		this.casesRef.forEach(val => {
 			val.current?.mine(false, false, false);
 		});
 	}
@@ -132,7 +129,7 @@ class Board extends PureComponent<IProps, IState> {
 		const mined = new Set<number>();
 		let nbMined = 0;
 
-		this.boardRef.forEach((val, i) => {
+		this.casesRef.forEach((val, i) => {
 			const cell = val.current!;
 			if (cell.getStatus() === 'visible') nbMined++;
 
@@ -147,7 +144,7 @@ class Board extends PureComponent<IProps, IState> {
 
 			doNearCases(index, this.width, this.height, (newIndex: number) => {
 				if (mined.has(newIndex)) return;
-				const cell = this.boardRef.at(newIndex)?.current!;
+				const cell = this.casesRef.at(newIndex)?.current!;
 
 				if (cell.getStatus() !== 'hidden') return;
 
@@ -169,12 +166,12 @@ class Board extends PureComponent<IProps, IState> {
 	}
 
 	componentDidMount() {
-		(document.querySelector('.Board') as HTMLDivElement).style.setProperty('--columns', this.width.toString());
-		(document.querySelector('.Board') as HTMLDivElement).style.setProperty('--rows', this.height.toString());
-		this.boardRef.forEach((val, i) => {
+		this.boardRef.current!.style.setProperty('--columns', this.width.toString());
+		this.boardRef.current!.style.setProperty('--rows', this.height.toString());
+		this.casesRef.forEach((val, i) => {
 			if (val.current?.getBombed()) {
 				doNearCases(i, this.width, this.height, index => {
-					this.boardRef.at(index)?.current?.increaseProximity();
+					this.casesRef.at(index)?.current?.increaseProximity();
 				});
 			}
 		});
@@ -187,12 +184,11 @@ class Board extends PureComponent<IProps, IState> {
 	render() {
 		return (
 			<div className="Game">
-				<div className="CounterContainer">
-					<Counter start={() => this.restart()} ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
-					<div>{this.state.gameover}</div>
-				</div>
+				<Counter start={() => this.restart()} ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
 				<div className="BoardContainer">
-					<div className="Board">{this.board}</div>
+					<div className="Board" ref={this.boardRef}>
+						{this.cases}
+					</div>
 					<SplashScreen ref={this.state.SplashRef} />
 				</div>
 			</div>

@@ -8,43 +8,40 @@ function doNearCases(
 	const x = index % width;
 	const y = Math.floor(index / width);
 
-	//not in the first row
-	if (y !== 0) {
+	const notFirstRow = y !== 0;
+	const notLastRow = y !== height - 1;
+	const notFirstCol = x !== 0;
+	const notLastCol = x !== width - 1;
+
+	// Handling adjacent cases
+	if (notFirstRow) {
+		// Top
 		callback(index - width);
-		//not in the first column
-		if (doAngles && x !== 0) {
-			callback(index - width - 1);
-		}
 
-		//not in the last column
-		if (doAngles && x !== width - 1) {
-			callback(index - width + 1);
+		if (doAngles) {
+			// Top-left
+			if (notFirstCol) callback(index - width - 1);
+			// Top-right
+			if (notLastCol) callback(index - width + 1);
 		}
 	}
 
-	//not in the last row
-	if (y !== height - 1) {
+	if (notLastRow) {
+		// Bottom
 		callback(index + width);
-		//not in the first column
-		if (doAngles && x !== 0) {
-			callback(index + width - 1);
-		}
 
-		//not in the last column
-		if (doAngles && x !== width - 1) {
-			callback(index + width + 1);
+		if (doAngles) {
+			// Bottom-left
+			if (notFirstCol) callback(index + width - 1);
+			// Bottom-right
+			if (notLastCol) callback(index + width + 1);
 		}
 	}
 
-	//not in the first column
-	if (x !== 0) {
-		callback(index - 1);
-	}
-
-	//not in the last column
-	if (x !== width - 1) {
-		callback(index + 1);
-	}
+	// Left
+	if (notFirstCol) callback(index - 1);
+	// Right
+	if (notLastCol) callback(index + 1);
 }
 
 export default doNearCases;
