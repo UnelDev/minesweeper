@@ -4,8 +4,7 @@
 }
 
 #root {
-	font-family: 'Minecraft', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-		'Helvetica Neue', sans-serif;
+	font-family: 'Minecraft', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	width: 100%;
@@ -13,6 +12,12 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	--border-radius: 15px;
+
+	// Test values
+	//	--color-main-background: black;
+	//	--color-main-text: white;
+	//	--color-background-darker: gray;
 }
 
 button,
@@ -24,19 +29,61 @@ input {
 	width: 80%;
 	height: 80%;
 	display: flex;
+	align-items: center;
 	justify-content: center;
 }
 
 .Menu {
-	padding: 5vh 3vw;
-	border-radius: 15px;
 	display: flex;
 	flex-direction: column;
 	text-align: center;
 	gap: 1vh;
-
+	padding: 4vh 2vw;
+	border-radius: var(--border-radius);
+	background-color: var(--color-main-background);
+	color: var(--color-main-text);
 	& > h2 {
 		font-size: 3em;
+	}
+	& > div {
+		display: grid;
+		gap: 2vw;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: 1fr 1fr;
+		font-size: 1.5em;
+		& > div {
+			cursor: pointer;
+			& > span {
+				cursor: pointer;
+			}
+			& > span:nth-child(2) {
+				font-size: 0.8em;
+			}
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 1vh;
+			width: 15vw;
+			height: 15vw;
+			border-radius: var(--border-radius);
+			background-color: var(--color-background-darker);
+		}
+	}
+}
+
+.CustomMenu {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	gap: 1vh;
+	padding: 5vh 3vw;
+	width: 20vw;
+	border-radius: var(--border-radius);
+	background-color: var(--color-main-background);
+	color: var(--color-main-text);
+	& > h2 {
+		font-size: 2em;
 	}
 
 	& > button {
@@ -62,21 +109,24 @@ input {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	height: 100%;
+	gap: 1vh;
+	border-radius: var(--border-radius);
+	background-color: var(--color-main-background);
+	color: var(--color-main-text);
+	padding: 2vh;
+
+	max-height: 100%;
 }
 
 .BoardContainer {
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr;
-	border-radius: 5px;
 	overflow: scroll;
 }
 
 .Board {
 	display: grid;
-	background-color: black;
-	border-radius: 5px;
 	user-select: none;
 	grid-area: 1 / 1;
 	z-index: 0;

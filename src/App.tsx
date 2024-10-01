@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import Board from './Classes/Board';
-import Menu from './Components/Menu';
+import { CustomMenu, Menu } from './Components/Menu';
 
 function App() {
 	const [content, setContent] = useState(<></>);
@@ -14,12 +14,13 @@ function App() {
 		);
 	}, []);
 
-	const menu = useCallback(
-		(values?: BoardValues) => {
-			setContent(<Menu values={values} start={start} />);
-		},
-		[start]
-	);
+	const startCustom = useCallback(() => {
+		setContent(<CustomMenu start={start} />);
+	}, [start]);
+
+	const menu = useCallback(() => {
+		setContent(<Menu startCustom={startCustom} start={start} />);
+	}, [start, startCustom]);
 
 	useEffect(() => {
 		menu();

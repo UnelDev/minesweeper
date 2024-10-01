@@ -20,9 +20,9 @@ class Particle {
 	private getRandomColor() {
 		// 20% of black particles
 		if (Math.random() > 0.2) {
-			return 'red';
+			return '#E52222';
 		} else {
-			return 'black';
+			return '#181818';
 		}
 	}
 
