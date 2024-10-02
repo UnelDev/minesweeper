@@ -9,6 +9,7 @@ import SplashScreen from './SplashScreen';
 interface IProps {
 	values: BoardValues;
 	start: (values: BoardValues) => void;
+	menu: () => void;
 }
 
 interface IState {
@@ -177,14 +178,15 @@ class Board extends PureComponent<IProps, IState> {
 		});
 	}
 
-	restart() {
-		this.props.start(this.props.values);
-	}
-
 	render() {
 		return (
 			<div className="Game">
-				<Counter start={() => this.restart()} ref={this.state.CounterRef} nbBombed={this.state.nbBombed} />
+				<Counter
+					menu={() => this.props.menu()}
+					start={() => this.props.start(this.props.values)}
+					ref={this.state.CounterRef}
+					nbBombed={this.state.nbBombed}
+				/>
 				<div className="BoardContainer">
 					<div className="Board" ref={this.boardRef}>
 						{this.cases}

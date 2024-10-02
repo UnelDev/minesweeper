@@ -4,6 +4,7 @@ import clearTime from '../Utils/clearTime';
 type IProps = {
 	nbBombed: number;
 	start: () => void;
+	menu: () => void;
 };
 
 type IState = {
@@ -39,10 +40,9 @@ class Counter extends Component<IProps, IState> {
 					<div className="timer">Time: {clearTime(this.state.time)}</div>
 					<div className="bombCounter">Bomb left: {this.props.nbBombed}</div>
 				</div>
-				<div>
-					<button className="RestartButton" onClick={this.props.start}>
-						Restart
-					</button>
+				<div className="Buttons">
+					<button onClick={this.props.start}>Restart</button>
+					<button onClick={this.props.menu}>Go back</button>
 				</div>
 			</div>
 		);

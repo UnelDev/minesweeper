@@ -164,9 +164,16 @@ input {
 	justify-content: space-between;
 }
 
-.RestartButton {
-	margin: 0;
-	box-sizing: border-box;
+.Buttons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1vw;
+
+	& > button {
+		margin: 0;
+		box-sizing: border-box;
+	}
 }
 
 .CounterText {
