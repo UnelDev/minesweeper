@@ -1,10 +1,10 @@
 import { PureComponent, createRef, RefObject } from 'react';
 
-import CaseImageChanger from '../Components/CaseImage';
+import CellImageChanger from '../Components/CellImageChanger';
 import ParticleExplosion from './Particles';
 
 interface IState {
-	status: caseStatus;
+	status: cellStatus;
 	particles: JSX.Element;
 }
 
@@ -15,15 +15,15 @@ interface IProps {
 	explode: () => void;
 }
 
-class Case extends PureComponent<IProps, IState> {
+class Cell extends PureComponent<IProps, IState> {
 	private isBombed: boolean;
 	private proximity: number;
-	private imageRef: RefObject<CaseImageChanger>;
+	private imageRef: RefObject<CellImageChanger>;
 
 	constructor(props: IProps) {
 		super(props);
 		this.isBombed = props.isBombed;
-		this.state = { status: 'hidden', particles: <></> };
+		this.state = { status: 'full', particles: <></> };
 		this.proximity = 0;
 		this.imageRef = createRef();
 	}
@@ -50,12 +50,12 @@ class Case extends PureComponent<IProps, IState> {
 		discover: boolean = false,
 		e: { x: number; y: number } | undefined = undefined
 	) {
-		if ((!mineFlagged && this.getStatus() === 'flagged') || this.getStatus() === 'visible') return;
+		if ((!mineFlagged && this.getStatus() === 'flagged') || this.getStatus() === 'discovered') return;
 
 		if (this.isBombed) {
 			this.changeImage('bomb');
 
-			this.setState({ status: 'visible' }, () => {
+			this.setState({ status: 'discovered' }, () => {
 				if (callExplode) {
 					this.props.explode();
 					if (e) {
@@ -67,7 +67,7 @@ class Case extends PureComponent<IProps, IState> {
 		} else {
 			this.changeImage(this.proximity.toString());
 
-			this.setState({ status: 'visible' }, () => {
+			this.setState({ status: 'discovered' }, () => {
 				if (discover) {
 					this.props.discover();
 				}
@@ -76,13 +76,13 @@ class Case extends PureComponent<IProps, IState> {
 	}
 
 	private flag() {
-		if (this.getStatus() === 'visible') return;
+		if (this.getStatus() === 'discovered') return;
 
 		if (this.getStatus() === 'flagged') {
 			this.changeImage('full');
 			this.props.addBombLeft(1);
 			this.setState({
-				status: 'hidden'
+				status: 'full'
 			});
 		} else {
 			this.changeImage('flag');
@@ -116,11 +116,11 @@ class Case extends PureComponent<IProps, IState> {
 				onClick={this.handleClick}
 				className="Case"
 			>
-				<CaseImageChanger ref={this.imageRef} />
+				<CellImageChanger ref={this.imageRef} />
 				{this.state.particles}
 			</div>
 		);
 	}
 }
 
-export default Case;
+export default Cell;

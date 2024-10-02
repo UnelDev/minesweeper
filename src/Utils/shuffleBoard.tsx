@@ -1,8 +1,8 @@
 import { RefObject } from 'react';
 
-import Case from '../Classes/Case';
+import Cell from '../Classes/Cell';
 
-function shuffleBoard(board: Array<JSX.Element>, boardRef: Array<RefObject<Case>>) {
+function shuffleBoard(board: Array<JSX.Element>, boardRef: Array<RefObject<Cell>>) {
 	let currentIndex = board.length;
 
 	while (currentIndex !== 0) {

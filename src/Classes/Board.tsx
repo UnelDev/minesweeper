@@ -2,7 +2,7 @@ import { PureComponent, createRef, RefObject } from 'react';
 
 import doNearCases from '../Utils/doNearCases';
 import shuffleBoard from '../Utils/shuffleBoard';
-import Case from './Case';
+import Cell from './Cell';
 import Counter from './Counter';
 import SplashScreen from './SplashScreen';
 
@@ -20,7 +20,7 @@ interface IState {
 
 class Board extends PureComponent<IProps, IState> {
 	private boardRef = createRef<HTMLDivElement>();
-	private casesRef: Array<RefObject<Case>> = [];
+	private casesRef: Array<RefObject<Cell>> = [];
 	private cases: Array<JSX.Element> = [];
 	height: number;
 	width: number;
@@ -41,7 +41,7 @@ class Board extends PureComponent<IProps, IState> {
 			const isBombed = i < this.props.values.bombs;
 			this.casesRef.push(createRef());
 			this.cases.push(
-				<Case
+				<Cell
 					explode={this.lose.bind(this)}
 					addBombLeft={(value: number) => this.setState({ nbBombed: this.state.nbBombed + value })}
 					discover={this.discoverEmptyCases.bind(this)}
@@ -71,7 +71,7 @@ class Board extends PureComponent<IProps, IState> {
 
 	explodeBoard() {
 		const index = this.casesRef.findIndex(
-			val => val.current?.getBombed() && val.current?.getStatus() === 'visible'
+			val => val.current?.getBombed() && val.current?.getStatus() === 'discovered'
 		);
 
 		if (index === -1) return;
@@ -132,9 +132,9 @@ class Board extends PureComponent<IProps, IState> {
 
 		this.casesRef.forEach((val, i) => {
 			const cell = val.current!;
-			if (cell.getStatus() === 'visible') nbMined++;
+			if (cell.getStatus() === 'discovered') nbMined++;
 
-			if (!cell.getBombed() && cell.getProximity() === 0 && cell.getStatus() === 'visible') {
+			if (!cell.getBombed() && cell.getProximity() === 0 && cell.getStatus() === 'discovered') {
 				stack.push(i);
 			}
 		});
@@ -147,7 +147,7 @@ class Board extends PureComponent<IProps, IState> {
 				if (mined.has(newIndex)) return;
 				const cell = this.casesRef.at(newIndex)?.current!;
 
-				if (cell.getStatus() !== 'hidden') return;
+				if (cell.getStatus() !== 'full') return;
 
 				mined.add(newIndex);
 				localNbMined++;

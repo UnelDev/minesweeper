@@ -1,3 +1,2 @@
-type caseStatus = 'visible' | 'hidden' | 'flagged';
-type Direction = 'top' | 'bottom' | 'left' | 'right' | 'center';
+type cellStatus = 'discovered' | 'full' | 'flagged';
 type BoardValues = { width: number; height: number; bombs: number };

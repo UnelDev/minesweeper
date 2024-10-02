@@ -7,7 +7,7 @@ interface IState {
 
 interface IProps {}
 
-class CaseImageChanger extends PureComponent<IProps, IState> {
+class CellImageChanger extends PureComponent<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 		this.state = {
@@ -59,4 +59,4 @@ class CaseImageChanger extends PureComponent<IProps, IState> {
 	}
 }
 
-export default CaseImageChanger;
+export default CellImageChanger;
