@@ -43,24 +43,30 @@ input {
 	border-radius: var(--border-radius);
 	background-color: var(--color-main-background-blur);
 	color: var(--color-main-text);
+
 	& > h2 {
 		font-size: 3em;
 	}
+
 	& > div {
 		display: grid;
 		gap: 2vw;
 		grid-template-columns: 1fr 1fr;
 		grid-template-rows: 1fr 1fr;
 		font-size: 1.5em;
+
 		& > button {
 			font-size: 1em;
 			cursor: pointer;
+
 			& > span {
 				cursor: pointer;
 			}
+
 			& > span:nth-child(2) {
 				font-size: 0.8em;
 			}
+
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -79,10 +85,11 @@ input {
 	text-align: center;
 	gap: 1vh;
 	padding: 5vh 3vw;
-	width: 20vw;
+	width: 30vw;
 	border-radius: var(--border-radius);
 	background-color: var(--color-main-background-blur);
 	color: var(--color-main-text);
+
 	& > h2 {
 		font-size: 2em;
 	}
@@ -93,12 +100,13 @@ input {
 	}
 
 	& > div {
-		font-family: 'Minecraft';
-		font-size: 1.5em;
 		& > input {
 			font-size: 1em;
 			width: 4em;
 		}
+
+		font-family: 'Minecraft';
+		font-size: 1.5em;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -115,15 +123,18 @@ input {
 	background-color: var(--color-main-background);
 	color: var(--color-main-text);
 	padding: 2vh;
-
 	max-height: 100%;
+	max-width: 100%;
 }
 
 .BoardContainer {
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr;
-	overflow: scroll;
+	overflow: auto;
+
+	max-height: 100%;
+	max-width: 100%;
 }
 
 .Board {
@@ -137,10 +148,9 @@ input {
 }
 
 .Case {
-	min-height: 3vmin;
-	max-height: 7vmin;
-
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 1 / 1 !important;
+	min-height: 2vmax;
+	max-height: 4vmax;
 
 	& > img {
 		width: 100%;
@@ -156,6 +166,7 @@ input {
 
 .RestartButton {
 	margin: 0;
+	box-sizing: border-box;
 }
 
 .CounterText {
