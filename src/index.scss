@@ -40,7 +40,7 @@ input {
 	gap: 1vh;
 	padding: 4vh 2vw;
 	border-radius: var(--border-radius);
-	background-color: var(--color-main-background);
+	background-color: var(--color-main-background-blur);
 	color: var(--color-main-text);
 	& > h2 {
 		font-size: 3em;
@@ -51,7 +51,8 @@ input {
 		grid-template-columns: 1fr 1fr;
 		grid-template-rows: 1fr 1fr;
 		font-size: 1.5em;
-		& > div {
+		& > button {
+			font-size: 1em;
 			cursor: pointer;
 			& > span {
 				cursor: pointer;
@@ -67,7 +68,6 @@ input {
 			width: 15vw;
 			height: 15vw;
 			border-radius: var(--border-radius);
-			background-color: var(--color-background-darker);
 		}
 	}
 }
@@ -80,7 +80,7 @@ input {
 	padding: 5vh 3vw;
 	width: 20vw;
 	border-radius: var(--border-radius);
-	background-color: var(--color-main-background);
+	background-color: var(--color-main-background-blur);
 	color: var(--color-main-text);
 	& > h2 {
 		font-size: 2em;

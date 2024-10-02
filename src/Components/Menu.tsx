@@ -5,19 +5,19 @@ function Menu({ startCustom, start }: { startCustom: () => void; start: (values:
 		<div className="Menu">
 			<h2>MINESWEEPER</h2>
 			<div>
-				<div onClick={() => start({ width: 9, height: 9, bombs: 10 })}>
+				<button onClick={() => start({ width: 9, height: 9, bombs: 10 })}>
 					<span>9 x 9</span>
 					<span>10 bombs</span>
-				</div>
-				<div onClick={() => start({ width: 16, height: 16, bombs: 40 })}>
+				</button>
+				<button onClick={() => start({ width: 16, height: 16, bombs: 40 })}>
 					<span>16 x 16</span>
 					<span>40 bombs</span>
-				</div>
-				<div onClick={() => start({ width: 30, height: 16, bombs: 99 })}>
+				</button>
+				<button onClick={() => start({ width: 30, height: 16, bombs: 99 })}>
 					<span>30 x 16</span>
 					<span>99 bombs</span>
-				</div>
-				<div onClick={startCustom}>Custom</div>
+				</button>
+				<button onClick={startCustom}>Custom</button>
 			</div>
 		</div>
 	);
