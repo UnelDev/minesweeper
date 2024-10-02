@@ -3,16 +3,12 @@ namespace OCA\Minesweeper\Controller;
 
 use OCP\IRequest;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 
 class PageController extends Controller {
-	private $userId;
-
-	public function __construct($AppName, IRequest $request, $UserId){
+	public function __construct($AppName, IRequest $request){
 		parent::__construct($AppName, $request);
-		$this->userId = $UserId;
 	}
 
 	/**
