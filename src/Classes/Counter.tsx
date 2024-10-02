@@ -1,8 +1,10 @@
 import { Component } from 'react';
+
 import clearTime from '../Utils/clearTime';
+import t from '../Utils/translate';
 
 type IProps = {
-	nbBombed: number;
+	bombLeft: number;
 	start: () => void;
 	menu: () => void;
 };
@@ -37,12 +39,12 @@ class Counter extends Component<IProps, IState> {
 		return (
 			<div className="Counter">
 				<div className="CounterText">
-					<div className="timer">Time: {clearTime(this.state.time)}</div>
-					<div className="bombCounter">Bomb left: {this.props.nbBombed}</div>
+					<div className="timer">{t('%t elapsed', { t: clearTime(this.state.time) })}</div>
+					<div className="bombCounter">{t('%n bombs left', { n: this.props.bombLeft })}</div>
 				</div>
 				<div className="Buttons">
-					<button onClick={this.props.start}>Restart</button>
-					<button onClick={this.props.menu}>Go back</button>
+					<button onClick={this.props.start}>{t('Restart')}</button>
+					<button onClick={this.props.menu}>{t('Go back')}</button>
 				</div>
 			</div>
 		);

@@ -185,7 +185,7 @@ class Board extends PureComponent<IProps, IState> {
 					menu={() => this.props.menu()}
 					start={() => this.props.start(this.props.values)}
 					ref={this.state.CounterRef}
-					nbBombed={this.state.nbBombed}
+					bombLeft={this.state.nbBombed}
 				/>
 				<div className="BoardContainer">
 					<div className="Board" ref={this.boardRef}>

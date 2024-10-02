@@ -8,7 +8,7 @@ function App() {
 
 	useEffect(() => {
 		function startCustom() {
-			setContent(<CustomMenu start={start} />);
+			setContent(<CustomMenu menu={menu} start={start} />);
 		}
 
 		function start(values: BoardValues) {
