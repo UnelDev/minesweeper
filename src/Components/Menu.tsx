@@ -1,5 +1,7 @@
 import { createRef } from 'react';
 
+const ERROR_BORDER = '2px solid var(--color-error-text)';
+
 function Menu({ startCustom, start }: { startCustom: () => void; start: (values: BoardValues) => void }) {
 	return (
 		<div className="Menu">
@@ -29,7 +31,11 @@ function CustomMenu({ start }: { start: (values: BoardValues) => void }) {
 	const bombs = createRef<HTMLInputElement>();
 
 	function next(key: string, index: number) {
+		if (index === 0) width.current!.style.border = '';
+		if (index === 1) height.current!.style.border = '';
+		if (index === 2) bombs.current!.style.border = '';
 		if (key !== 'Enter') return;
+
 		if (index === 0) {
 			document.getElementById('height')?.focus();
 		} else if (index === 1) {
@@ -39,7 +45,31 @@ function CustomMenu({ start }: { start: (values: BoardValues) => void }) {
 		}
 	}
 
+	function checkValues() {
+		const w = parseInt(width.current!.value);
+		const h = parseInt(height.current!.value);
+		const b = parseInt(bombs.current!.value);
+		let errored = false;
+
+		if (isNaN(w) || w <= 0) {
+			width.current!.style.border = ERROR_BORDER;
+			errored = true;
+		}
+
+		if (isNaN(h) || h <= 0) {
+			height.current!.style.border = ERROR_BORDER;
+			errored = true;
+		}
+
+		if (w * h <= b || isNaN(b)) {
+			bombs.current!.style.border = ERROR_BORDER;
+			errored = true;
+		}
+		return errored;
+	}
+
 	function click() {
+		if (checkValues()) return;
 		start({
 			width: parseInt(width.current!.value),
 			height: parseInt(height.current!.value),
