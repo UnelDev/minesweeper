@@ -44,7 +44,7 @@ input {
 	color: var(--color-main-text);
 
 	& > h2 {
-		letter-spacing: 0.2em;
+		letter-spacing: 0.05em;
 		font-size: 3em;
 	}
 
@@ -53,11 +53,10 @@ input {
 		gap: 2vw;
 		grid-template-columns: 1fr 1fr;
 		grid-template-rows: 1fr 1fr;
-		font-size: 1.5em;
 
 		& > button {
 			letter-spacing: 0.04em;
-			font-size: 1em;
+			font-size: 1.5em;
 			cursor: pointer;
 
 			& > span {
@@ -91,7 +90,7 @@ input {
 	color: var(--color-main-text);
 
 	& > h2 {
-		letter-spacing: 0.1em;
+		letter-spacing: 0.05em;
 		font-size: 2em;
 	}
 
