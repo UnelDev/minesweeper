@@ -1,4 +1,4 @@
-function doNearCases(
+function doNearCells(
 	index: number,
 	width: number,
 	height: number,
@@ -44,4 +44,4 @@ function doNearCases(
 	if (notLastCol) callback(index + 1);
 }
 
-export default doNearCases;
+export default doNearCells;

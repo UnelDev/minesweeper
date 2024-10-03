@@ -114,7 +114,7 @@ class Cell extends PureComponent<IProps, IState> {
 				onContextMenu={this.handleContextMenu}
 				onDragStart={this.preventDrag}
 				onClick={this.handleClick}
-				className="Case"
+				className="Cell"
 			>
 				<CellImageChanger ref={this.imageRef} />
 				{this.state.particles}

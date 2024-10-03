@@ -152,7 +152,7 @@ input {
 	grid-template-rows: repeat(var(--rows), 1fr);
 }
 
-.Case {
+.Cell {
 	aspect-ratio: 1 / 1 !important;
 	min-height: 2vmax;
 	max-height: 4vmax;
