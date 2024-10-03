@@ -1,4 +1,5 @@
 OC.L10N.register('minesweeper', {
+	Minesweeper: 'Démineur',
 	MINESWEEPER: 'DEMINEUR',
 	'%n bombs': '%n bombes',
 	Bombs: 'Bombes',
