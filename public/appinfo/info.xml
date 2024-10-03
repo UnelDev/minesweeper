@@ -4,10 +4,7 @@
     <id>minesweeper</id>
     <name>Minesweeper</name>
     <summary>Minesweeper</summary>
-    <description><![CDATA[
-# Minesweeper
-A Nextcloud home-made Minesweeper.
-    ]]></description>
+    <description><![CDATA[A home-made Minesweeper for Nextcloud.]]></description>
     <version>1.0.0</version>
     <licence>agpl</licence>
     <author mail="enee.diiorio@gmail.com" homepage="https://UnelDev.github.io">UnelDev</author>
