@@ -59,7 +59,7 @@ class Board extends PureComponent<IProps, IState> {
 
 	lose() {
 		this.state.CounterRef.current!.stop();
-		this.state.SplashRef.current!.lose();
+		this.state.SplashRef.current!.lose(this.state.CounterRef.current!);
 		this.explodeBoard();
 	}
 

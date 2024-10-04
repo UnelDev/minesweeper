@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import Counter from './Counter';
+import clearTime from '../Utils/clearTime';
 
 interface IProps {}
 
@@ -15,8 +17,10 @@ class SplashScreen extends Component<IProps, IState> {
 		};
 	}
 
-	lose() {
-		this.setState({ content: <div className="splashScreen explodeScreen"></div> });
+	lose(counter: Counter) {
+		this.setState({
+			content: <div className="splashScreen explodeScreen">you lose after {clearTime(counter.getTime())}</div>
+		});
 	}
 
 	win() {

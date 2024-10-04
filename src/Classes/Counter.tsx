@@ -28,6 +28,20 @@ class Counter extends Component<IProps, IState> {
 		});
 	}
 
+	getTime(): number {
+		return this.state.time;
+	}
+
+	start() {
+		if (!this.state.timeout) {
+			this.setState({
+				timeout: setInterval(() => {
+					this.setState({ time: this.state.time + 1 });
+				}, 1000)
+			});
+		}
+	}
+
 	stop() {
 		clearInterval(this.state.timeout);
 	}
