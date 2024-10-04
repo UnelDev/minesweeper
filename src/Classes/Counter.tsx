@@ -15,17 +15,11 @@ type IState = {
 };
 
 class Counter extends Component<IProps, IState> {
+	started: boolean;
 	constructor(props: IProps) {
 		super(props);
 		this.state = { time: 0, timeout: undefined };
-	}
-
-	componentDidMount(): void {
-		this.setState({
-			timeout: setInterval(() => {
-				this.setState({ time: this.state.time + 1 });
-			}, 1000)
-		});
+		this.started = false;
 	}
 
 	getTime(): number {
@@ -33,7 +27,7 @@ class Counter extends Component<IProps, IState> {
 	}
 
 	start() {
-		if (!this.state.timeout) {
+		if (!this.started) {
 			this.setState({
 				timeout: setInterval(() => {
 					this.setState({ time: this.state.time + 1 });

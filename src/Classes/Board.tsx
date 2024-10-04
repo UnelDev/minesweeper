@@ -24,6 +24,7 @@ class Board extends PureComponent<IProps, IState> {
 	private cells: Array<JSX.Element> = [];
 	height: number;
 	width: number;
+	counterStared = false;
 
 	constructor(props: IProps) {
 		super(props);
@@ -188,7 +189,16 @@ class Board extends PureComponent<IProps, IState> {
 					bombLeft={this.state.nbBombed}
 				/>
 				<div className="BoardContainer">
-					<div className="Board" ref={this.boardRef}>
+					<div
+						className="Board"
+						ref={this.boardRef}
+						onClick={() => {
+							if (!this.counterStared) {
+								this.counterStared = true;
+								this.state.CounterRef.current?.start();
+							}
+						}}
+					>
 						{this.cells}
 					</div>
 					<SplashScreen ref={this.state.SplashRef} />
