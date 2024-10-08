@@ -28,6 +28,7 @@ class Counter extends Component<IProps, IState> {
 
 	start() {
 		if (!this.started) {
+			this.started = true;
 			this.setState({
 				timeout: setInterval(() => {
 					this.setState({ time: this.state.time + 1 });
@@ -41,8 +42,9 @@ class Counter extends Component<IProps, IState> {
 	}
 
 	componentWillUnmount(): void {
-		clearInterval(this.state.timeout);
+		this.stop();
 	}
+
 	render() {
 		return (
 			<div className="Counter">

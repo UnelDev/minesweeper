@@ -19,12 +19,14 @@ class SplashScreen extends Component<IProps, IState> {
 
 	lose(counter: Counter) {
 		this.setState({
-			content: <div className="splashScreen explodeScreen">you lose after {clearTime(counter.getTime())}</div>
+			content: <div className="splashScreen explodeScreen">You lose after {clearTime(counter.getTime())}</div>
 		});
 	}
 
-	win() {
-		this.setState({ content: <div className="splashScreen winScreen"></div> });
+	win(counter: Counter) {
+		this.setState({
+			content: <div className="splashScreen winScreen">You win in {clearTime(counter.getTime())}</div>
+		});
 	}
 
 	render() {
